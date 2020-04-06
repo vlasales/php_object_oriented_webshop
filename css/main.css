@@ -1,0 +1,23 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    overflow-y: scroll;
+}
+
+/*line*/
+#login-form::before, #logout-form::before{
+    content: "";
+    height: 20px;
+    width: 1px;
+    background: #f8f9fa;
+    margin: 0px 10px;
+}
+
+@media (max-width: 992px) {
+    #login-form::before, #logout-form::before{
+        display: none;
+    }
+}
