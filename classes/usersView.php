@@ -14,15 +14,32 @@ class UsersView extends UsersModel{
             </form>
             <?php
             if(isset($_SESSION['isAdmin'])){
+                if($result['isAdmin'] == 0){
+                    ?>
+                    <form method="POST" action="users.php">
+                        <input name="userIDMakeAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
+                        <button type="submit" name="userMakeAdmin" class="mb-2 btn btn-info">Make admin</button>
+                    </form>
+            <?php
+                } else {
+                    
+                    if($result['userID'] == 1){
+                        //must have an empty if. if i do if(!$result..) then the form is not shown
+                        ?>
+                        
+                    <?php
+                    } else {
+                        ?>
+                        <form method="POST" action="users.php">
+                            <input name="userIDRemoveAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
+                            <button type="submit" name="userRemoveAdmin" class="mb-2 btn btn-info">Remove admin</button>
+                        </form>
+                    <?php
+                    }
+                    ?>
+            <?php
+                }
                 ?>
-                <form method="POST" action="users.php">
-                <input name="userIDMakeAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
-                <button type="submit" name="userMakeAdmin" class="mb-2 btn btn-info">Make admin</button>
-            </form>
-            <form method="POST" action="users.php">
-                <input name="userIDRemoveAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
-                <button type="submit" name="userRemoveAdmin" class="mb-2 btn btn-info">Remove admin</button>
-            </form>
             <?php
             }
             ?>
@@ -44,11 +61,18 @@ class UsersView extends UsersModel{
             ?>
             <?php
             if(isset($_SESSION['isAdmin'])){
-                ?>
-            <form method="POST" action="users.php">
+                if($result['userID'] == 1){
+                    //empty so that root admin cannot be deleted
+                } else {
+                    ?>
+                    <form method="POST" action="users.php">
                 <input type="hidden" name="deleteUserID" value="<?php echo $result['userID'] ?>">
                 <button type="submit" name="deleteUserBtn" class="btn btn-danger">Delete this User</button>
             </form>
+            <?php
+                }
+                ?>
+            
             <?php
             }
             ?>
@@ -74,15 +98,31 @@ class UsersView extends UsersModel{
             -->
             <?php
             if(isset($_SESSION['isAdmin'])){
+            if($result['isAdmin'] == 0){
+                    ?>
+                    <form method="POST" action="users.php">
+                        <input name="userIDMakeAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
+                        <button type="submit" name="userMakeAdmin" class="mb-2 btn btn-info">Make admin</button>
+                    </form>
+            <?php
+                } else {
+                    if($result['userID'] == 1){
+                        //must have an empty if. if i do if(!$result..) then the form is not shown
+                        ?>
+                        
+                    <?php
+                    } else {
+                        ?>
+                        <form method="POST" action="users.php">
+                            <input name="userIDRemoveAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
+                            <button type="submit" name="userRemoveAdmin" class="mb-2 btn btn-info">Remove admin</button>
+                        </form>
+                    <?php
+                    }
+                    ?>
+                    <?php
+                }
                 ?>
-            <form method="POST" action="users.php">
-                <input name="userIDMakeAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
-                <button type="submit" name="userMakeAdmin" class="mb-2 btn btn-info">Make admin</button>
-            </form>
-            <form method="POST" action="users.php">
-                <input name="userIDRemoveAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
-                <button type="submit" name="userRemoveAdmin" class="mb-2 btn btn-info">Remove admin</button>
-            </form>
             <?php
             }
             ?>
@@ -103,12 +143,18 @@ class UsersView extends UsersModel{
             }
             ?>
             <?php
-            if(isset($_SESSION['isAdmin'])){
+            if(isset($_SESSION['uid']) && $_SESSION['uid'] == $result['userID'] || isset($_SESSION['isAdmin'])){
+                if($result['userID'] == 1){
+                    //empty so that root admin cannot be deleted
+                } else {
+                    ?>
+                    <form method="POST" action="users.php">
+                        <input type="hidden" name="deleteUserID" value="<?php echo $result['userID'] ?>">
+                        <button type="submit" name="deleteUserBtn" class="btn btn-danger">Delete this User</button>
+                    </form>
+            <?php
+                }
                 ?>
-            <form method="POST" action="users.php">
-                <input type="hidden" name="deleteUserID" value="<?php echo $result['userID'] ?>">
-                <button type="submit" name="deleteUserBtn" class="btn btn-danger">Delete this User</button>
-            </form>
             <?php
             }
             ?>
@@ -145,11 +191,18 @@ class UsersView extends UsersModel{
                 </div>
                 <button name="updateUserBtn" type="submit" class="btn btn-warning">Update</button>
             </form>
-            <form method="POST" action="users.php">
+            <?php
+            if($result['userID'] == 1){
+                //cannot delete root admin on my-account page
+            } else {
+                ?>
+                <form method="POST" action="users.php">
                 <input type="hidden" name="deleteUserID" value="<?php echo $result['userID'] ?>">
                 <button type="submit" name="deleteUserBtn" class="btn btn-danger">Delete this User</button>
             </form>
             <?php
+            }
+
             }
             ?>
             <?php
@@ -171,15 +224,29 @@ class UsersView extends UsersModel{
             </form>
             <?php
             if(isset($_SESSION['isAdmin'])){
+                if($result['isAdmin'] == 0){
+                    ?>
+                    <form method="POST" action="users.php">
+                        <input name="userIDMakeAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
+                        <button type="submit" name="userMakeAdmin" class="mb-2 btn btn-info">Make admin</button>
+                    </form>
+            <?php
+                } else {
+                    ?>
+                    <?php
+                    if($result['userID'] == 1){
+                        //cannot remove admin
+                    } else {
+                        ?>
+                        <form method="POST" action="users.php">
+                        <input name="userIDRemoveAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
+                        <button type="submit" name="userRemoveAdmin" class="mb-2 btn btn-info">Remove admin</button>
+                    </form>
+                    <?php
+                    }
+                    
+                }
                 ?>
-                <form method="POST" action="users.php">
-                <input name="userIDMakeAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
-                <button type="submit" name="userMakeAdmin" class="mb-2 btn btn-info">Make admin</button>
-            </form>
-            <form method="POST" action="users.php">
-                <input name="userIDRemoveAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
-                <button type="submit" name="userRemoveAdmin" class="mb-2 btn btn-info">Remove admin</button>
-            </form>
             <?php
             }
             ?>
@@ -202,11 +269,17 @@ class UsersView extends UsersModel{
             <?php
             if(isset($_SESSION['isAdmin'])){
                 ?>
-            <form method="POST" action="users.php">
-                <input type="hidden" name="deleteUserID" value="<?php echo $result['userID'] ?>">
-                <button type="submit" name="deleteUserBtn" class="btn btn-danger">Delete this User</button>
-            </form>
-            <?php
+                <?php
+                if($result['userID'] == 1){
+                    //cannot delete
+                } else {
+                    ?>
+                    <form method="POST" action="users.php">
+                        <input type="hidden" name="deleteUserID" value="<?php echo $result['userID'] ?>">
+                        <button type="submit" name="deleteUserBtn" class="btn btn-danger">Delete this User</button>
+                    </form>
+                    <?php
+                }
             }
             ?>
             <hr>
@@ -229,15 +302,22 @@ class UsersView extends UsersModel{
             </form>
             <?php
             if(isset($_SESSION['isAdmin'])){
+                if($result['isAdmin'] == 0){
+                    ?>
+                    <form method="POST" action="users.php">
+                        <input name="userIDMakeAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
+                        <button type="submit" name="userMakeAdmin" class="mb-2 btn btn-info">Make admin</button>
+                    </form>
+            <?php
+                } else {
+                    ?>
+                    <form method="POST" action="users.php">
+                        <input name="userIDRemoveAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
+                        <button type="submit" name="userRemoveAdmin" class="mb-2 btn btn-info">Remove admin</button>
+                    </form>
+            <?php
+                }
                 ?>
-                <form method="POST" action="users.php">
-                <input name="userIDMakeAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
-                <button type="submit" name="userMakeAdmin" class="mb-2 btn btn-info">Make admin</button>
-            </form>
-            <form method="POST" action="users.php">
-                <input name="userIDRemoveAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
-                <button type="submit" name="userRemoveAdmin" class="mb-2 btn btn-info">Remove admin</button>
-            </form>
             <?php
             }
             ?>

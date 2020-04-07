@@ -27,10 +27,9 @@ class WishlistModel extends DBconn{
         $userID = $_GET['id'];
 
         if(isset($userID)){
-        $sql = "SELECT * FROM oopphp_users, oopphp_wishlist WHERE userID_fk = ? ORDER BY itemID_fk ASC";
+        $sql = "SELECT * FROM oopphp_users INNER JOIN oopphp_wishlist ON oopphp_users.userID = oopphp_wishlist.userID_fk ORDER BY itemID_fk ASC";
         $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam(1, $userID, PDO::PARAM_INT);
-        $stmt->
         $stmt->execute();
 
         $itemCount = $stmt->rowCount();

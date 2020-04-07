@@ -3,9 +3,6 @@
 
     include 'includes/session.php';
     include 'includes/config.php';
-
-    $redirect = new Functions();
-    $redirect->redirectNotLoggedIn();
 ?>
 
 <!DOCTYPE html>
@@ -20,8 +17,10 @@
         <div class="row">
             <div class="col-lg-12">
                 <?php
-                    $wishlistMess = new Functions();
-                    $wishlistMess->session_message();
+                    $func = new Functions();
+                    $func->session_message();
+
+                    $func->redirectNotLoggedIn();
                 ?>
                 <h1>Your account</h1>
             </div>
