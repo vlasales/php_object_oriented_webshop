@@ -52,7 +52,7 @@ class UsersView extends UsersModel{
                 <input name="updateUserID" type="hidden" value="<?php echo $result['userID'] ?>">
                 <div class="form-group">
                     <label for="updateUserName">New name</label>
-                    <input name="updateUserName" type="text" value="<?php echo $result['userName']; ?>">
+                    <input name="updateUserName" type="text" value="<?php echo $result['userName']; ?>" class="form-control">
                 </div>
                 <button name="updateUserBtn" type="submit" class="btn btn-warning">Update</button>
             </form>
@@ -135,7 +135,7 @@ class UsersView extends UsersModel{
                 <input name="updateUserID" type="hidden" value="<?php echo $result['userID'] ?>">
                 <div class="form-group">
                     <label for="updateUserName">New name</label>
-                    <input name="updateUserName" type="text" value="<?php echo $result['userName']; ?>">
+                    <input name="updateUserName" type="text" value="<?php echo $result['userName']; ?>" class="form-control">
                 </div>
                 <button name="updateUserBtn" type="submit" class="btn btn-warning">Update</button>
             </form>
@@ -187,10 +187,28 @@ class UsersView extends UsersModel{
                 <input name="updateUserID" type="hidden" value="<?php echo $result['userID'] ?>">
                 <div class="form-group">
                     <label for="updateUserName">New name</label>
-                    <input name="updateUserName" type="text" value="<?php echo $result['userName']; ?>">
+                    <input name="updateUserName" type="text" value="<?php echo $result['userName']; ?>" class="form-control">
                 </div>
                 <button name="updateUserBtn" type="submit" class="btn btn-warning">Update</button>
             </form>
+            <?php
+            if($result['wishlistIsPublic'] == 0){
+                ?>
+                <form method="POST" action="my-account.php" class="mb-2">
+                <input type="hidden" name="wishlistPublicID" value="<?php echo $result['userID'] ?>">
+                <button name="makeWishlistPublic" type="submit" class="btn btn-primary">Make wishlist public</button>
+            </form>
+            <?php
+            } else {
+                ?>
+                <form method="POST" action="my-account.php" class="mb-2">
+                <input type="hidden" name="wishlistPrivateID" value="<?php echo $result['userID'] ?>">
+                <button name="makeWishlistPrivate" type="submit" class="btn btn-primary">Make wishlist private</button>
+            </form>
+            <?php
+            }
+            ?>
+            
             <?php
             if($result['userID'] == 1){
                 //cannot delete root admin on my-account page
@@ -259,7 +277,7 @@ class UsersView extends UsersModel{
                 <input name="updateUserID" type="hidden" value="<?php echo $result['userID'] ?>">
                 <div class="form-group">
                     <label for="updateUserName">New name</label>
-                    <input name="updateUserName" type="text" value="<?php echo $result['userName']; ?>">
+                    <input name="updateUserName" type="text" value="<?php echo $result['userName']; ?>" class="form-control">
                 </div>
                 <button name="updateUserBtn" type="submit" class="btn btn-warning">Update</button>
             </form>
@@ -330,7 +348,7 @@ class UsersView extends UsersModel{
                 <input name="updateUserID" type="hidden" value="<?php echo $result['userID'] ?>">
                 <div class="form-group">
                     <label for="updateUserName">New name</label>
-                    <input name="updateUserName" type="text" value="<?php echo $result['userName']; ?>">
+                    <input name="updateUserName" type="text" value="<?php echo $result['userName']; ?>" class="form-control">
                 </div>
                 <button name="updateUserBtn" type="submit" class="btn btn-warning">Update</button>
             </form>

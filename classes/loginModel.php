@@ -5,6 +5,7 @@ class LoginModel extends DBconn{
         $userPassword = filter_input(INPUT_POST, 'loginPassword');
         $loginBtn = filter_input(INPUT_POST, 'loginBtn');
 
+        if(isset($loginBtn)){
         $sql = "SELECT * FROM oopphp_users WHERE username = ?";
         $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam(1, $userName, PDO::PARAM_STR);
@@ -13,7 +14,7 @@ class LoginModel extends DBconn{
         $results = $stmt->fetch();
         //return $results;
 
-        if(isset($loginBtn)){
+        
             if($stmt->rowCount() > 0){
                 if(password_verify($userPassword, $results['userPassword_hash'])){
                     $_SESSION['uid'] = $results['userID'];

@@ -28,7 +28,6 @@ class ItemsModel extends DBconn{
         
         if(isset($itemID)){
             //$itemID = $_GET['id'];
-
             $sql = "SELECT * FROM oopphp_items WHERE itemID = ?";
             $stmt = $this->connect()->prepare($sql);
             $stmt->bindParam(1, $itemID, PDO::PARAM_INT);
@@ -65,10 +64,8 @@ class ItemsModel extends DBconn{
             $stmt->bindParam(3, $itemPrice, PDO::PARAM_STR);
             $stmt->bindParam(4, $itemStock, PDO::PARAM_INT);
             $stmt->execute();
-        }
-
+        
         //only show if the button is clicked
-        if(isset($newItemBtn)){
             if($stmt->rowCount() > 0){
                 $_SESSION['sessMSG'] = "<div class='alert alert-success'>Item with name {$itemName} added.</div>"; 
                 header("location: index.php");
@@ -77,6 +74,7 @@ class ItemsModel extends DBconn{
                 header("location: index.php");
             }
         }
+        
     }
 
     protected function setDeleteItem(){

@@ -127,9 +127,8 @@ class UsersModel extends DBconn{
             $stmt->bindParam(1, $userName, PDO::PARAM_STR);
             $stmt->bindParam(2, $userPasswordHash, PDO::PARAM_STR);
             $stmt->execute();
-        }
+        
 
-        if(isset($newUserBtn)){
             if($stmt->rowCount() > 0){
                 $_SESSION['sessMSG'] = "<div class='alert alert-success'>User with name {$userName} created.</div>"; 
                 header("location: users.php");
@@ -145,6 +144,7 @@ class UsersModel extends DBconn{
         $userID = filter_input(INPUT_POST, 'deleteUserID');
         $deleteUserBtn = filter_input(INPUT_POST, 'deleteUserBtn');
 
+        if(isset($deleteUserBtn)){
         if($userID == 1){
             $_SESSION['sessMSG'] = "<div class='alert alert-danger'>This user is the root admin and cannot be deleted</div>"; 
             header("location: users.php");
@@ -154,7 +154,7 @@ class UsersModel extends DBconn{
         $stmt->bindParam(1, $userID, PDO::PARAM_INT);
         $stmt->execute();
 
-        if(isset($deleteUserBtn)){
+        
             if($stmt->rowCount() > 0){
                 $_SESSION['sessMSG'] = "<div class='alert alert-success'>User with ID {$userID} deleted.</div>"; 
                 header("location: users.php");
@@ -172,13 +172,14 @@ class UsersModel extends DBconn{
         $userName = htmlentities(filter_input(INPUT_POST, 'updateUserName'));
         $updateUserBtn = filter_input(INPUT_POST, 'updateUserBtn');
 
+        if(isset($updateUserBtn)){
         $sql = "UPDATE oopphp_users SET userName = ? WHERE userID = ?";
         $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam(1, $userName, PDO::PARAM_STR);
         $stmt->bindParam(2, $userID, PDO::PARAM_INT);
         $stmt->execute();
 
-        if(isset($updateUserBtn)){
+        
             if($stmt->rowCount() > 0){
                 $_SESSION['sessMSG'] = "<div class='alert alert-success'>User with ID {$userID} updated.</div>"; 
                 header("location: users.php");
@@ -194,12 +195,13 @@ class UsersModel extends DBconn{
         $userID = filter_input(INPUT_POST, 'userIDMakeAdmin');
         $makeAdminBtn = filter_input(INPUT_POST, 'userMakeAdmin');
 
+        if(isset($makeAdminBtn)){
         $sql = "UPDATE oopphp_users SET isAdmin = 1 WHERE userID = ?";
         $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam(1, $userID, PDO::PARAM_INT);
         $stmt->execute();
 
-        if(isset($makeAdminBtn)){
+        
             if($stmt->rowCount() > 0){
                 $_SESSION['sessMSG'] = "<div class='alert alert-success'>User with ID {$userID} is now an admin.</div>"; 
                 header("location: users.php");
@@ -214,7 +216,8 @@ class UsersModel extends DBconn{
     protected function setUserRemoveAdmin(){
         $userID = filter_input(INPUT_POST, 'userIDRemoveAdmin');
         $makeAdminBtn = filter_input(INPUT_POST, 'userRemoveAdmin');
-
+        
+        if(isset($makeAdminBtn)){
         if($userID == 1){
             $_SESSION['sessMSG'] = "<div class='alert alert-danger'>This user is the root admin and cannot be removed as admin.</div>"; 
             header("location: users.php");
@@ -224,7 +227,7 @@ class UsersModel extends DBconn{
         $stmt->bindParam(1, $userID, PDO::PARAM_INT);
         $stmt->execute();
 
-        if(isset($makeAdminBtn)){
+        
             if($stmt->rowCount() > 0){
                 $_SESSION['sessMSG'] = "<div class='alert alert-success'>User with ID {$userID} is no longer an admin.</div>"; 
                 header("location: users.php");

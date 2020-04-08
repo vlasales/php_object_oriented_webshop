@@ -34,12 +34,12 @@ class WishlistModel extends DBconn{
 
         $itemCount = $stmt->rowCount();
 
-        echo '<h1 class="w-100">There are ' . $itemCount . ' items on this users wishlist</h1>';
-
         if($stmt->rowCount() > 0){
+            echo '<h1 class="w-100">There are ' . $itemCount . ' items on this users wishlist</h1>';
             $results = $stmt->fetchAll();
             return $results;
         } else {
+            echo '<p>This user either has no items in their wishlist or their wishlist is set to private</p>';
             //$_SESSION['sessMSG'] = "<div class='alert alert-danger'>No items in the database.</div>"; 
             //header("location: index.php");
         }
@@ -66,10 +66,7 @@ class WishlistModel extends DBconn{
             $stmt->bindParam(4, $itemDescription_fk, PDO::PARAM_STR);
             $stmt->bindParam(5, $itemPrice_fk, PDO::PARAM_STR);
             $stmt->execute();
-        }
-        
 
-        if(isset($addItemToWishlistBtn)){
             if($stmt->rowCount() > 0){
                 $_SESSION['sessMSG'] = "<div class='alert alert-success'>Item with name {$itemName_fk} added to wishlist.</div>"; 
                 header("location: index.php");
@@ -86,17 +83,61 @@ class WishlistModel extends DBconn{
         $deleteItemBtn = filter_input(INPUT_POST, 'deleteWishlistItemBtn');
         $itemID = filter_input(INPUT_POST, 'wishlisteItemID');
 
+        if(isset($deleteItemBtn)){
         $sql = "DELETE FROM oopphp_wishlist WHERE itemID_fk = ?";
         $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam(1, $itemID, PDO::PARAM_INT);
         $stmt->execute();
 
-        if(isset($deleteItemBtn)){
             if($stmt->rowCount() > 0){
                 $_SESSION['sessMSG'] = "<div class='alert alert-success'>Item with ID {$itemID} removed from wishlist.</div>"; 
                 header("location: my-account.php");
             } else {
                 $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Error. Item with ID {$itemID} not removed from wishlist.</div>"; 
+                header("location: my-account.php");
+            }
+        }
+    }
+
+    //set wishlist public
+    protected function setWishlistPublic(){
+        $userID = htmlentities(filter_input(INPUT_POST, 'wishlistPublicID'));
+        $wishlistPublicBtn = filter_input(INPUT_POST, 'makeWishlistPublic');
+
+        if(isset($wishlistPublicBtn)){
+        $sql = "UPDATE oopphp_users SET wishlistIsPublic = 1 WHERE userID = ?";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(1, $userID, PDO::PARAM_INT);
+        $stmt->execute();
+
+        
+            if($stmt->rowCount() > 0){
+                $_SESSION['sessMSG'] = "<div class='alert alert-success'>User with ID {$userID} wishlist is now public.</div>"; 
+                header("location: my-account.php");
+            } else {
+                $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Error. User with ID {$userID} not public.</div>"; 
+                header("location: my-account.php");
+            }
+        }
+    }
+
+    //wishlist private
+    protected function setWishlistPrivate(){
+        $userID = htmlentities(filter_input(INPUT_POST, 'wishlistPrivateID'));
+        $wishlistPrivateBtn = filter_input(INPUT_POST, 'makeWishlistPrivate');
+
+        if(isset($wishlistPrivateBtn)){
+        $sql = "UPDATE oopphp_users SET wishlistIsPublic = 0 WHERE userID = ?";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(1, $userID, PDO::PARAM_INT);
+        $stmt->execute();
+
+        
+            if($stmt->rowCount() > 0){
+                $_SESSION['sessMSG'] = "<div class='alert alert-success'>User with ID {$userID} wishlist is now private.</div>"; 
+                header("location: my-account.php");
+            } else {
+                $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Error. User with ID {$userID} not private.</div>"; 
                 header("location: my-account.php");
             }
         }

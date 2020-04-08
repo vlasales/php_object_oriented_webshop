@@ -21,14 +21,13 @@ class WishlistView extends WishlistModel{
             <?php
             $total_price_sum = $total_price_sum + $result['itemPrice_fk'];
         }
-        echo "<h2 class='text-primary'>Your total cart price: {$total_price_sum}</h2>";
+        echo "<h2 class='text-primary'>Your total cart price: {$total_price_sum} DKK</h2>";
     }
 
     public function showWishlist2(){
         $results = $this->getWishList2();
         $total_price_sum = 0;
         foreach($results as $result){
-            if($result['wishlistIsPublic'] == 1){
                 ?>
                     <p><?php echo $result['itemID_fk']; ?></p>
                     <img src="https://via.placeholder.com/300">
@@ -38,10 +37,7 @@ class WishlistView extends WishlistModel{
                     <hr>
                 <?php
                 $total_price_sum = $total_price_sum + $result['itemPrice_fk'];
-            } else {
-                    echo 'This user has set their wishlist to private';
-            }
         }
-        echo "<h2 class='text-primary'>This users total cart price: {$total_price_sum}</h2>";
+        echo "<h2 class='text-primary'>This users total cart price: {$total_price_sum} DKK</h2>";
     }
 }
