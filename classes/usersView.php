@@ -2,371 +2,384 @@
 class UsersView extends UsersModel{
     public function showUsers(){
         $results = $this->getUsers();
-        foreach($results as $result){
-            ?>
-            <p><?php echo $result['userID']; ?></p>
-            <p><?php echo $result['userName']; ?></p>
-            <p><?php echo $result['userPassword_hash']; ?></p>
-            <p><?php echo $result['isAdmin']; ?></p>
-            <form method="GET" action="user.php">
-                <input type="hidden" name="id" value="<?php echo $result['userID'] ?>">
-                <button type="submit" class="mb-2 btn btn-primary">See more of this user</button>
-            </form>
-            <?php
-            if(isset($_SESSION['isAdmin'])){
-                if($result['isAdmin'] == 0){
-                    ?>
-                    <form method="POST" action="users.php">
-                        <input name="userIDMakeAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
-                        <button type="submit" name="userMakeAdmin" class="mb-2 btn btn-info">Make admin</button>
-                    </form>
-            <?php
-                } else {
-                    
-                    if($result['userID'] == 1){
-                        //must have an empty if. if i do if(!$result..) then the form is not shown
+        if(isset($results)){
+            foreach($results as $result){
+                ?>
+                <p><?php echo $result['userID']; ?></p>
+                <p><?php echo $result['userName']; ?></p>
+                <p><?php echo $result['userPassword_hash']; ?></p>
+                <p><?php echo $result['isAdmin']; ?></p>
+                <form method="GET" action="user.php">
+                    <input type="hidden" name="id" value="<?php echo $result['userID'] ?>">
+                    <button type="submit" class="mb-2 btn btn-primary">See more of this user</button>
+                </form>
+                <?php
+                if(isset($_SESSION['isAdmin'])){
+                    if($result['isAdmin'] == 0){
                         ?>
+                        <form method="POST" action="users.php">
+                            <input name="userIDMakeAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
+                            <button type="submit" name="userMakeAdmin" class="mb-2 btn btn-info">Make admin</button>
+                        </form>
+                <?php
+                    } else {
                         
-                    <?php
+                        if($result['userID'] == 1){
+                            //must have an empty if. if i do if(!$result..) then the form is not shown
+                            ?>
+                            
+                        <?php
+                        } else {
+                            ?>
+                            <form method="POST" action="users.php">
+                                <input name="userIDRemoveAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
+                                <button type="submit" name="userRemoveAdmin" class="mb-2 btn btn-info">Remove admin</button>
+                            </form>
+                        <?php
+                        }
+                        ?>
+                <?php
+                    }
+                    ?>
+                <?php
+                }
+                ?>
+                <?php
+                //if user is logged in and session id matches the id from the result table
+                if(isset($_SESSION['uid']) && $_SESSION['uid'] == $result['userID']){
+                    ?>
+                <form method="POST" action="users.php" class="mb-2">
+                    <p>Update user information</p>
+                    <input name="updateUserID" type="hidden" value="<?php echo $result['userID'] ?>">
+                    <div class="form-group">
+                        <label for="updateUserName">New name</label>
+                        <input name="updateUserName" type="text" value="<?php echo $result['userName']; ?>" class="form-control">
+                    </div>
+                    <button name="updateUserBtn" type="submit" class="btn btn-warning">Update</button>
+                </form>
+                <?php
+                }
+                ?>
+                <?php
+                if(isset($_SESSION['isAdmin'])){
+                    if($result['userID'] == 1){
+                        //empty so that root admin cannot be deleted
                     } else {
                         ?>
                         <form method="POST" action="users.php">
-                            <input name="userIDRemoveAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
-                            <button type="submit" name="userRemoveAdmin" class="mb-2 btn btn-info">Remove admin</button>
-                        </form>
-                    <?php
+                    <input type="hidden" name="deleteUserID" value="<?php echo $result['userID'] ?>">
+                    <button type="submit" name="deleteUserBtn" class="btn btn-danger">Delete this User</button>
+                </form>
+                <?php
                     }
                     ?>
-            <?php
+                
+                <?php
                 }
                 ?>
-            <?php
+                <hr>
+                <?php
             }
-            ?>
-            <?php
-            //if user is logged in and session id matches the id from the result table
-            if(isset($_SESSION['uid']) && $_SESSION['uid'] == $result['userID']){
-                ?>
-            <form method="POST" action="users.php" class="mb-2">
-                <p>Update user information</p>
-                <input name="updateUserID" type="hidden" value="<?php echo $result['userID'] ?>">
-                <div class="form-group">
-                    <label for="updateUserName">New name</label>
-                    <input name="updateUserName" type="text" value="<?php echo $result['userName']; ?>" class="form-control">
-                </div>
-                <button name="updateUserBtn" type="submit" class="btn btn-warning">Update</button>
-            </form>
-            <?php
-            }
-            ?>
-            <?php
-            if(isset($_SESSION['isAdmin'])){
-                if($result['userID'] == 1){
-                    //empty so that root admin cannot be deleted
-                } else {
-                    ?>
-                    <form method="POST" action="users.php">
-                <input type="hidden" name="deleteUserID" value="<?php echo $result['userID'] ?>">
-                <button type="submit" name="deleteUserBtn" class="btn btn-danger">Delete this User</button>
-            </form>
-            <?php
-                }
-                ?>
-            
-            <?php
-            }
-            ?>
-            <hr>
-            <?php
         }
     }
 
     //specific user
     public function showUserWhere(){
         $results = $this->getUserWhere();
-        foreach($results as $result){
-            ?>
-            <p><?php echo $result['userID']; ?></p>
-            <p><?php echo $result['userName']; ?></p>
-            <p><?php echo $result['userPassword_hash']; ?></p>
-            <p><?php echo $result['isAdmin']; ?></p>
-            <!--
-            <form method="GET" action="user.php">
-                <input type="hidden" name="id" value="<?php echo $result['userID'] ?>">
-                <button type="submit" class="mb-2 btn btn-primary">See more of this user</button>
-            </form>
-            -->
-            <?php
-            if(isset($_SESSION['isAdmin'])){
-            if($result['isAdmin'] == 0){
-                    ?>
-                    <form method="POST" action="users.php">
-                        <input name="userIDMakeAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
-                        <button type="submit" name="userMakeAdmin" class="mb-2 btn btn-info">Make admin</button>
-                    </form>
-            <?php
-                } else {
-                    if($result['userID'] == 1){
-                        //must have an empty if. if i do if(!$result..) then the form is not shown
+        if(isset($results)){
+            foreach($results as $result){
+                ?>
+                <p><?php echo $result['userID']; ?></p>
+                <p><?php echo $result['userName']; ?></p>
+                <p><?php echo $result['userPassword_hash']; ?></p>
+                <p><?php echo $result['isAdmin']; ?></p>
+                <!--
+                <form method="GET" action="user.php">
+                    <input type="hidden" name="id" value="<?php echo $result['userID'] ?>">
+                    <button type="submit" class="mb-2 btn btn-primary">See more of this user</button>
+                </form>
+                -->
+                <?php
+                if(isset($_SESSION['isAdmin'])){
+                if($result['isAdmin'] == 0){
                         ?>
-                        
-                    <?php
+                        <form method="POST" action="users.php">
+                            <input name="userIDMakeAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
+                            <button type="submit" name="userMakeAdmin" class="mb-2 btn btn-info">Make admin</button>
+                        </form>
+                <?php
+                    } else {
+                        if($result['userID'] == 1){
+                            //must have an empty if. if i do if(!$result..) then the form is not shown
+                            ?>
+                            
+                        <?php
+                        } else {
+                            ?>
+                            <form method="POST" action="users.php">
+                                <input name="userIDRemoveAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
+                                <button type="submit" name="userRemoveAdmin" class="mb-2 btn btn-info">Remove admin</button>
+                            </form>
+                        <?php
+                        }
+                        ?>
+                        <?php
+                    }
+                    ?>
+                <?php
+                }
+                ?>
+                <?php
+                //if user is logged in and session id matches the id from the result table
+                if(isset($_SESSION['uid']) && $_SESSION['uid'] == $result['userID']){
+                    ?>
+                <form method="POST" action="users.php" class="mb-2">
+                    <p>Update user information</p>
+                    <input name="updateUserID" type="hidden" value="<?php echo $result['userID'] ?>">
+                    <div class="form-group">
+                        <label for="updateUserName">New name</label>
+                        <input name="updateUserName" type="text" value="<?php echo $result['userName']; ?>" class="form-control">
+                    </div>
+                    <button name="updateUserBtn" type="submit" class="btn btn-warning">Update</button>
+                </form>
+                <?php
+                }
+                ?>
+                <?php
+                if(isset($_SESSION['uid']) && $_SESSION['uid'] == $result['userID'] || isset($_SESSION['isAdmin'])){
+                    if($result['userID'] == 1){
+                        //empty so that root admin cannot be deleted
                     } else {
                         ?>
                         <form method="POST" action="users.php">
-                            <input name="userIDRemoveAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
-                            <button type="submit" name="userRemoveAdmin" class="mb-2 btn btn-info">Remove admin</button>
+                            <input type="hidden" name="deleteUserID" value="<?php echo $result['userID'] ?>">
+                            <button type="submit" name="deleteUserBtn" class="btn btn-danger">Delete this User</button>
                         </form>
-                    <?php
+                <?php
                     }
                     ?>
-                    <?php
+                <?php
                 }
                 ?>
-            <?php
+                <hr>
+                <?php
             }
-            ?>
-            <?php
-            //if user is logged in and session id matches the id from the result table
-            if(isset($_SESSION['uid']) && $_SESSION['uid'] == $result['userID']){
-                ?>
-            <form method="POST" action="users.php" class="mb-2">
-                <p>Update user information</p>
-                <input name="updateUserID" type="hidden" value="<?php echo $result['userID'] ?>">
-                <div class="form-group">
-                    <label for="updateUserName">New name</label>
-                    <input name="updateUserName" type="text" value="<?php echo $result['userName']; ?>" class="form-control">
-                </div>
-                <button name="updateUserBtn" type="submit" class="btn btn-warning">Update</button>
-            </form>
-            <?php
-            }
-            ?>
-            <?php
-            if(isset($_SESSION['uid']) && $_SESSION['uid'] == $result['userID'] || isset($_SESSION['isAdmin'])){
-                if($result['userID'] == 1){
-                    //empty so that root admin cannot be deleted
-                } else {
-                    ?>
-                    <form method="POST" action="users.php">
-                        <input type="hidden" name="deleteUserID" value="<?php echo $result['userID'] ?>">
-                        <button type="submit" name="deleteUserBtn" class="btn btn-danger">Delete this User</button>
-                    </form>
-            <?php
-                }
-                ?>
-            <?php
-            }
-            ?>
-            <hr>
-            <?php
         }
     }
 
     //specific user for my-account.php
     public function showMyUser(){
         $results = $this->getMyUser();
-        foreach($results as $result){
-            ?>
-            <p><?php echo $result['userID']; ?></p>
-            <p><?php echo $result['userName']; ?></p>
-            <p><?php echo $result['userPassword_hash']; ?></p>
-            <p><?php echo $result['isAdmin']; ?></p>
-            <!--
-            <form method="GET" action="user.php">
-                <input type="hidden" name="id" value="<?php echo $result['userID'] ?>">
-                <button type="submit" class="mb-2 btn btn-primary">See more of this user</button>
-            </form>
-            -->
-            <?php
-            //if user is logged in and session id matches the id from the result table
-            if(isset($_SESSION['uid']) && $_SESSION['uid'] == $result['userID']){
+        if(isset($results)){
+            foreach($results as $result){
                 ?>
-            <form method="POST" action="users.php" class="mb-2">
-                <p>Update user information</p>
-                <input name="updateUserID" type="hidden" value="<?php echo $result['userID'] ?>">
-                <div class="form-group">
-                    <label for="updateUserName">New name</label>
-                    <input name="updateUserName" type="text" value="<?php echo $result['userName']; ?>" class="form-control">
-                </div>
-                <button name="updateUserBtn" type="submit" class="btn btn-warning">Update</button>
-            </form>
-            <?php
-            if($result['wishlistIsPublic'] == 0){
+                <p><?php echo $result['userID']; ?></p>
+                <p><?php echo $result['userName']; ?></p>
+                <p><?php echo $result['userPassword_hash']; ?></p>
+                <p><?php echo $result['isAdmin']; ?></p>
+                <!--
+                <form method="GET" action="user.php">
+                    <input type="hidden" name="id" value="<?php echo $result['userID'] ?>">
+                    <button type="submit" class="mb-2 btn btn-primary">See more of this user</button>
+                </form>
+                -->
+                <?php
+                //if user is logged in and session id matches the id from the result table
+                if(isset($_SESSION['uid']) && $_SESSION['uid'] == $result['userID']){
+                    ?>
+                <form method="POST" action="users.php" class="mb-2">
+                    <p>Update user information</p>
+                    <input name="updateUserID" type="hidden" value="<?php echo $result['userID'] ?>">
+                    <div class="form-group">
+                        <label for="updateUserName">New name</label>
+                        <input name="updateUserName" type="text" value="<?php echo $result['userName']; ?>" class="form-control">
+                    </div>
+                    <button name="updateUserBtn" type="submit" class="btn btn-warning">Update</button>
+                    <hr>
+                </form>
+                <?php
+                if($result['wishlistIsPublic'] == 0){
+                    ?>
+                    <p>Your wishlist is currently <span class="font-weight-bold text-primary">private.</span></p>
+                    <form method="POST" action="my-account.php" class="mb-2">
+                    <input type="hidden" name="wishlistPublicID" value="<?php echo $result['userID'] ?>">
+                    <button name="makeWishlistPublic" type="submit" class="btn btn-primary">Make wishlist public</button>
+                </form>
+                <?php
+                } else {
+                    ?>
+                    <p>Your wishlist is currently <span class="font-weight-bold text-primary">public</span></p>
+                    <form method="POST" action="my-account.php" class="mb-2">
+                    <input type="hidden" name="wishlistPrivateID" value="<?php echo $result['userID'] ?>">
+                    <button name="makeWishlistPrivate" type="submit" class="btn btn-primary">Make wishlist private</button>
+                </form>
+                <?php
+                }
                 ?>
-                <form method="POST" action="my-account.php" class="mb-2">
-                <input type="hidden" name="wishlistPublicID" value="<?php echo $result['userID'] ?>">
-                <button name="makeWishlistPublic" type="submit" class="btn btn-primary">Make wishlist public</button>
-            </form>
-            <?php
-            } else {
+                
+                <?php
+                if($result['userID'] == 1){
+                    //cannot delete root admin on my-account page
+                } else {
+                    ?>
+                    <form method="POST" action="users.php">
+                    <input type="hidden" name="deleteUserID" value="<?php echo $result['userID'] ?>">
+                    <button type="submit" name="deleteUserBtn" class="btn btn-danger">Delete this User</button>
+                </form>
+                <?php
+                }
+    
+                }
                 ?>
-                <form method="POST" action="my-account.php" class="mb-2">
-                <input type="hidden" name="wishlistPrivateID" value="<?php echo $result['userID'] ?>">
-                <button name="makeWishlistPrivate" type="submit" class="btn btn-primary">Make wishlist private</button>
-            </form>
-            <?php
+                <?php
             }
-            ?>
-            
-            <?php
-            if($result['userID'] == 1){
-                //cannot delete root admin on my-account page
-            } else {
-                ?>
-                <form method="POST" action="users.php">
-                <input type="hidden" name="deleteUserID" value="<?php echo $result['userID'] ?>">
-                <button type="submit" name="deleteUserBtn" class="btn btn-danger">Delete this User</button>
-            </form>
-            <?php
-            }
-
-            }
-            ?>
-            <?php
         }
     }
 
     //admin
     public function showUsersAdmin(){
         $results = $this->getUsersAdmin();
-        foreach($results as $result){
-            ?>
-            <p><?php echo $result['userID']; ?></p>
-            <p><?php echo $result['userName']; ?></p>
-            <p><?php echo $result['userPassword_hash']; ?></p>
-            <p><?php echo $result['isAdmin']; ?></p>
-            <form method="GET" action="user.php">
-                <input type="hidden" name="id" value="<?php echo $result['userID'] ?>">
-                <button type="submit" class="mb-2 btn btn-primary">See more of this user</button>
-            </form>
-            <?php
-            if(isset($_SESSION['isAdmin'])){
-                if($result['isAdmin'] == 0){
+        if(isset($results)){
+            foreach($results as $result){
+                ?>
+                <p><?php echo $result['userID']; ?></p>
+                <p><?php echo $result['userName']; ?></p>
+                <p><?php echo $result['userPassword_hash']; ?></p>
+                <p><?php echo $result['isAdmin']; ?></p>
+                <form method="GET" action="user.php">
+                    <input type="hidden" name="id" value="<?php echo $result['userID'] ?>">
+                    <button type="submit" class="mb-2 btn btn-primary">See more of this user</button>
+                </form>
+                <?php
+                if(isset($_SESSION['isAdmin'])){
+                    if($result['isAdmin'] == 0){
+                        ?>
+                        <form method="POST" action="users.php">
+                            <input name="userIDMakeAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
+                            <button type="submit" name="userMakeAdmin" class="mb-2 btn btn-info">Make admin</button>
+                        </form>
+                <?php
+                    } else {
+                        ?>
+                        <?php
+                        if($result['userID'] == 1){
+                            //cannot remove admin
+                        } else {
+                            ?>
+                            <form method="POST" action="users.php">
+                            <input name="userIDRemoveAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
+                            <button type="submit" name="userRemoveAdmin" class="mb-2 btn btn-info">Remove admin</button>
+                        </form>
+                        <?php
+                        }
+                        
+                    }
                     ?>
-                    <form method="POST" action="users.php">
-                        <input name="userIDMakeAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
-                        <button type="submit" name="userMakeAdmin" class="mb-2 btn btn-info">Make admin</button>
-                    </form>
-            <?php
-                } else {
+                <?php
+                }
+                ?>
+                <?php
+                //if user is logged in and session id matches the id from the result table
+                if(isset($_SESSION['uid']) && $_SESSION['uid'] == $result['userID']){
+                    ?>
+                <form method="POST" action="users.php" class="mb-2">
+                    <p>Update user information</p>
+                    <input name="updateUserID" type="hidden" value="<?php echo $result['userID'] ?>">
+                    <div class="form-group">
+                        <label for="updateUserName">New name</label>
+                        <input name="updateUserName" type="text" value="<?php echo $result['userName']; ?>" class="form-control">
+                    </div>
+                    <button name="updateUserBtn" type="submit" class="btn btn-warning">Update</button>
+                </form>
+                <?php
+                }
+                ?>
+                <?php
+                if(isset($_SESSION['isAdmin'])){
                     ?>
                     <?php
                     if($result['userID'] == 1){
-                        //cannot remove admin
+                        //cannot delete
                     } else {
                         ?>
                         <form method="POST" action="users.php">
-                        <input name="userIDRemoveAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
-                        <button type="submit" name="userRemoveAdmin" class="mb-2 btn btn-info">Remove admin</button>
-                    </form>
-                    <?php
+                            <input type="hidden" name="deleteUserID" value="<?php echo $result['userID'] ?>">
+                            <button type="submit" name="deleteUserBtn" class="btn btn-danger">Delete this User</button>
+                        </form>
+                        <?php
                     }
-                    
                 }
                 ?>
-            <?php
-            }
-            ?>
-            <?php
-            //if user is logged in and session id matches the id from the result table
-            if(isset($_SESSION['uid']) && $_SESSION['uid'] == $result['userID']){
-                ?>
-            <form method="POST" action="users.php" class="mb-2">
-                <p>Update user information</p>
-                <input name="updateUserID" type="hidden" value="<?php echo $result['userID'] ?>">
-                <div class="form-group">
-                    <label for="updateUserName">New name</label>
-                    <input name="updateUserName" type="text" value="<?php echo $result['userName']; ?>" class="form-control">
-                </div>
-                <button name="updateUserBtn" type="submit" class="btn btn-warning">Update</button>
-            </form>
-            <?php
-            }
-            ?>
-            <?php
-            if(isset($_SESSION['isAdmin'])){
-                ?>
+                <hr>
                 <?php
-                if($result['userID'] == 1){
-                    //cannot delete
-                } else {
-                    ?>
-                    <form method="POST" action="users.php">
-                        <input type="hidden" name="deleteUserID" value="<?php echo $result['userID'] ?>">
-                        <button type="submit" name="deleteUserBtn" class="btn btn-danger">Delete this User</button>
-                    </form>
-                    <?php
-                }
             }
-            ?>
-            <hr>
-            <?php
         }
     }
 
     //nonadmin
     public function showUsersNotAdmin(){
         $results = $this->getUsersNotAdmin();
-        foreach($results as $result){
-            ?>
-            <p><?php echo $result['userID']; ?></p>
-            <p><?php echo $result['userName']; ?></p>
-            <p><?php echo $result['userPassword_hash']; ?></p>
-            <p><?php echo $result['isAdmin']; ?></p>
-            <form method="GET" action="user.php">
-                <input type="hidden" name="id" value="<?php echo $result['userID'] ?>">
-                <button type="submit" class="mb-2 btn btn-primary">See more of this user</button>
-            </form>
-            <?php
-            if(isset($_SESSION['isAdmin'])){
-                if($result['isAdmin'] == 0){
+        if(isset($results)){
+            foreach($results as $result){
+                ?>
+                <p><?php echo $result['userID']; ?></p>
+                <p><?php echo $result['userName']; ?></p>
+                <p><?php echo $result['userPassword_hash']; ?></p>
+                <p><?php echo $result['isAdmin']; ?></p>
+                <form method="GET" action="user.php">
+                    <input type="hidden" name="id" value="<?php echo $result['userID'] ?>">
+                    <button type="submit" class="mb-2 btn btn-primary">See more of this user</button>
+                </form>
+                <?php
+                if(isset($_SESSION['isAdmin'])){
+                    if($result['isAdmin'] == 0){
+                        ?>
+                        <form method="POST" action="users.php">
+                            <input name="userIDMakeAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
+                            <button type="submit" name="userMakeAdmin" class="mb-2 btn btn-info">Make admin</button>
+                        </form>
+                <?php
+                    } else {
+                        ?>
+                        <form method="POST" action="users.php">
+                            <input name="userIDRemoveAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
+                            <button type="submit" name="userRemoveAdmin" class="mb-2 btn btn-info">Remove admin</button>
+                        </form>
+                <?php
+                    }
                     ?>
-                    <form method="POST" action="users.php">
-                        <input name="userIDMakeAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
-                        <button type="submit" name="userMakeAdmin" class="mb-2 btn btn-info">Make admin</button>
-                    </form>
-            <?php
-                } else {
-                    ?>
-                    <form method="POST" action="users.php">
-                        <input name="userIDRemoveAdmin" type="hidden" value="<?php echo $result['userID'] ?>">
-                        <button type="submit" name="userRemoveAdmin" class="mb-2 btn btn-info">Remove admin</button>
-                    </form>
-            <?php
+                <?php
                 }
                 ?>
-            <?php
-            }
-            ?>
-            <?php
-            //if user is logged in and session id matches the id from the result table
-            if(isset($_SESSION['uid']) && $_SESSION['uid'] == $result['userID']){
+                <?php
+                //if user is logged in and session id matches the id from the result table
+                if(isset($_SESSION['uid']) && $_SESSION['uid'] == $result['userID']){
+                    ?>
+                <form method="POST" action="users.php" class="mb-2">
+                    <p>Update user information</p>
+                    <input name="updateUserID" type="hidden" value="<?php echo $result['userID'] ?>">
+                    <div class="form-group">
+                        <label for="updateUserName">New name</label>
+                        <input name="updateUserName" type="text" value="<?php echo $result['userName']; ?>" class="form-control">
+                    </div>
+                    <button name="updateUserBtn" type="submit" class="btn btn-warning">Update</button>
+                </form>
+                <?php
+                }
                 ?>
-            <form method="POST" action="users.php" class="mb-2">
-                <p>Update user information</p>
-                <input name="updateUserID" type="hidden" value="<?php echo $result['userID'] ?>">
-                <div class="form-group">
-                    <label for="updateUserName">New name</label>
-                    <input name="updateUserName" type="text" value="<?php echo $result['userName']; ?>" class="form-control">
-                </div>
-                <button name="updateUserBtn" type="submit" class="btn btn-warning">Update</button>
-            </form>
-            <?php
-            }
-            ?>
-            <?php
-            if(isset($_SESSION['isAdmin'])){
+                <?php
+                if(isset($_SESSION['isAdmin'])){
+                    ?>
+                <form method="POST" action="users.php">
+                    <input type="hidden" name="deleteUserID" value="<?php echo $result['userID'] ?>">
+                    <button type="submit" name="deleteUserBtn" class="btn btn-danger">Delete this User</button>
+                </form>
+                <?php
+                }
                 ?>
-            <form method="POST" action="users.php">
-                <input type="hidden" name="deleteUserID" value="<?php echo $result['userID'] ?>">
-                <button type="submit" name="deleteUserBtn" class="btn btn-danger">Delete this User</button>
-            </form>
-            <?php
+                <hr>
+                <?php
             }
-            ?>
-            <hr>
-            <?php
         }
     }
 

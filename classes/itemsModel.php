@@ -12,9 +12,13 @@ class ItemsModel extends DBconn{
         $stmt->execute();
 
         $itemCount = $stmt->rowCount();
-        echo '<h1 class="w-100 pl-3">There are ' . $itemCount . ' items</h1>';
+        if($itemCount == 1){
+            echo "<h1 class='w-100 pl-3'>There is {$itemCount} item</h1>";
+        } else {
+            echo "<h1 class='w-100 pl-3'>There are {$itemCount} items</h1>";
+        }
 
-        if($stmt->rowCount() > 0){
+        if($itemCount > 0){
             $results = $stmt->fetchAll();
             return $results;
         } else {
@@ -25,6 +29,7 @@ class ItemsModel extends DBconn{
 
     protected function getItemWhere(){
         $itemID = filter_input(INPUT_GET, 'id');
+        $_POST['page_title'] = $itemID;
         
         if(isset($itemID)){
             //$itemID = $_GET['id'];
@@ -40,7 +45,6 @@ class ItemsModel extends DBconn{
                 $_SESSION['sessMSG'] = "<div class='alert alert-danger'>An item with the ID of {$itemID} does not exist.</div>"; 
                 header("location: index.php");
             }
-
         } else {
             $_SESSION['sessMSG'] = "<div class='alert alert-danger'>No item ID selected.</div>"; 
             header("location: index.php");
@@ -89,7 +93,7 @@ class ItemsModel extends DBconn{
             $itemID = filter_input(INPUT_POST, 'deleteItemID');
 
             $sql = "DELETE FROM oopphp_items WHERE itemID = ?";
-            $stmt = $this->connect()->prepare($sql);
+            $stmt = $pdo->prepare($sql);
             $stmt->bindParam(1, $itemID, PDO::PARAM_INT);
             $stmt->execute();
 
@@ -97,9 +101,11 @@ class ItemsModel extends DBconn{
             $itemID_fk = filter_input(INPUT_POST, 'deleteItemID');
 
             $sql = "DELETE FROM oopphp_wishlist WHERE itemID_fk = ?";
-            $stmt2 = $this->connect()->prepare($sql);
+            $stmt2 = $pdo->prepare($sql);
             $stmt2->bindParam(1, $itemID_fk, PDO::PARAM_INT);
             $stmt2->execute();
+
+            $pdo->commit();
 
         }
         catch(Exception $e){

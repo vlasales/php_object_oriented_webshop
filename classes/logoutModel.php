@@ -11,10 +11,12 @@ class LogoutModel extends DBconn{
                     $_SESSION['sessMSG'] = "<div class='alert alert-success'>You are now logged out.</div>";
                     header('location:index.php');
             } else {
-                ?><h1 class="alert alert-danger">No userlogin set.</h1><?php
+                $_SESSION['sessMSG'] = "<div class='alert alert-danger'>No userlogin set.</div>";
+                header('location:index.php');
             }
         } else {
-            ?><h1 class="alert alert-danger">You are not logged in.</h1><?php
+            $_SESSION['sessMSG'] = "<div class='alert alert-danger'>No logout set.</div>";
+            header('location:index.php');
         }
     }
 }

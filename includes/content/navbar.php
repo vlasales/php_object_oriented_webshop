@@ -18,6 +18,9 @@
         <li class="nav-item">
             <a class="nav-link text-light" href="my-account.php">My account</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" href="search.php">Search</a>
+        </li>
         </ul>
         <hr class="border-light"><!--only visable on mobile-->
         <?php

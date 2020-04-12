@@ -1,6 +1,6 @@
 <?php
 class WishlistModel extends DBconn{
-    protected function getWishlist(){
+    protected function getWishlistAccount(){
         
         $userID = $_SESSION['uid'];
 
@@ -11,7 +11,11 @@ class WishlistModel extends DBconn{
         $stmt->execute();
 
         $itemCount = $stmt->rowCount();
-        echo '<h1 class="w-100">There are ' . $itemCount . ' items in your wishlist</h1>';
+        if($itemCount == 1){
+            echo "<h1 class='w-100'>There is {$itemCount} item in your wishlist</h1>";
+        } else {
+            echo "<h1 class='w-100'>There are {$itemCount} items in your wishlist</h1>";
+        }
 
         if($stmt->rowCount() > 0){
             $results = $stmt->fetchAll();
@@ -23,27 +27,46 @@ class WishlistModel extends DBconn{
     }
     }
 
-    protected function getWIshlist2(){
+    protected function getWIshlistUsers(){
         $userID = $_GET['id'];
 
         if(isset($userID)){
-        $sql = "SELECT * FROM oopphp_users INNER JOIN oopphp_wishlist ON oopphp_users.userID = oopphp_wishlist.userID_fk ORDER BY itemID_fk ASC";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam(1, $userID, PDO::PARAM_INT);
-        $stmt->execute();
+            $pdo = $this->connect();
+            $sql = "SELECT wishlistIsPublic FROM oopphp_users WHERE userID = ?";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(1, $userID, PDO::PARAM_INT);
+            $stmt->bindColumn('wishlistIsPublic', $wishlistIsPublic, PDO::PARAM_INT);
+            $stmt->execute();
 
-        $itemCount = $stmt->rowCount();
+            //get specific column only
+            $results = $stmt->fetchColumn();
+            
 
-        if($stmt->rowCount() > 0){
-            echo '<h1 class="w-100">There are ' . $itemCount . ' items on this users wishlist</h1>';
+            $sql = "SELECT * FROM oopphp_wishlist WHERE userID_fk = ? ORDER BY itemID_fk ASC";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(1, $userID, PDO::PARAM_INT);
+            $stmt->execute();
+
             $results = $stmt->fetchAll();
-            return $results;
-        } else {
-            echo '<p>This user either has no items in their wishlist or their wishlist is set to private</p>';
-            //$_SESSION['sessMSG'] = "<div class='alert alert-danger'>No items in the database.</div>"; 
-            //header("location: index.php");
+            $itemCount = $stmt->rowCount();
+
+            
+
+            if($wishlistIsPublic == 1) {
+                if($itemCount > 0) {
+                    if($itemCount == 1){
+                        echo "<h1 class='w-100'>There is {$itemCount} item in this users wishlist</h1>";
+                    } else {
+                        echo "<h1 class='w-100'>There are {$itemCount} items in this users wishlist</h1>";
+                    }
+                    return $results;
+                } else {
+                    echo "<div class='alert alert-info'>This users wishlist is empty.</div>";
+                }
+            } else {
+                echo "<div class='alert alert-info'>This user has set their wishlist to private.</div>";
+            }
         }
-    }
     }
 
     //add to wishlist
@@ -80,13 +103,14 @@ class WishlistModel extends DBconn{
     //delete from wishlist
     protected function setDeleteItemWishlist(){
         //delete
-        $deleteItemBtn = filter_input(INPUT_POST, 'deleteWishlistItemBtn');
+        $insertID = filter_input(INPUT_POST, 'wishlistInsertID');
         $itemID = filter_input(INPUT_POST, 'wishlisteItemID');
+        $deleteItemBtn = filter_input(INPUT_POST, 'deleteWishlistItemBtn');
 
         if(isset($deleteItemBtn)){
-        $sql = "DELETE FROM oopphp_wishlist WHERE itemID_fk = ?";
+        $sql = "DELETE FROM oopphp_wishlist WHERE insertID = ?";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam(1, $itemID, PDO::PARAM_INT);
+        $stmt->bindParam(1, $insertID, PDO::PARAM_INT);
         $stmt->execute();
 
             if($stmt->rowCount() > 0){

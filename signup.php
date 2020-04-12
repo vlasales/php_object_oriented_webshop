@@ -3,6 +3,7 @@
 
     include 'includes/session.php';
     include 'includes/config.php';
+    include 'includes/variables.php';
 ?>
 
 <!DOCTYPE html>
@@ -27,21 +28,21 @@
                     <label for="name">Name</label>
                     <input type="text" name="newUsername" class="form-control" required>
                     <div class="valid-feedback">
-                            Valid
-                        </div>
-                        <div class="invalid-feedback">
-                            You must fill out this input
-                        </div>
+                        <?php echo $valid_feedback ?>
+                    </div>
+                    <div class="invalid-feedback">
+                        <?php echo $invalid_feedback ?>
+                    </div>
                     </div>
             <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" name="newUserpassword" class="form-control" required>
                     <div class="valid-feedback">
-                            Valid
-                        </div>
-                        <div class="invalid-feedback">
-                            You must fill out this input
-                        </div>
+                        <?php echo $valid_feedback ?>
+                    </div>
+                    <div class="invalid-feedback">
+                        <?php echo $invalid_feedback ?>
+                    </div>
             </div>
                     <button type="submit" name="newUserBtn" class="btn btn-success">Create user</button>
                 </form>

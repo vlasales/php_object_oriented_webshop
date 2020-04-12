@@ -3,6 +3,7 @@
 
     include 'includes/session.php';
     include 'includes/config.php';
+    include 'includes/variables.php';
 ?>
 
 <!DOCTYPE html>
@@ -23,40 +24,40 @@
             <label for="newItemName">Name</label>
             <input type="text" name="newItemName" class="form-control" required>
             <div class="valid-feedback">
-                Valid
+                <?php echo $valid_feedback ?>
             </div>
             <div class="invalid-feedback">
-                You must fill out this input
+                <?php echo $invalid_feedback ?>
             </div>
         </div>
         <div class="form-group">
             <label for="newItemDescription">Description</label>
             <input type="text" name="newItemDescription" class="form-control" required>
             <div class="valid-feedback">
-                Valid
+                <?php echo $valid_feedback ?>
             </div>
             <div class="invalid-feedback">
-                You must fill out this input
+                <?php echo $invalid_feedback ?>
             </div>
         </div>
         <div class="form-group">
             <label for="newItemPrice">Price</label>
             <input type="number" name="newItemPrice" class="form-control" required>
             <div class="valid-feedback">
-                Valid
+                <?php echo $valid_feedback ?>
             </div>
             <div class="invalid-feedback">
-                You must fill out this input
+                <?php echo $invalid_feedback ?>
             </div>
         </div>
         <div class="form-group">
             <label for="newItemStock">Stock</label>
             <input type="number" name="newItemStock" class="form-control" required>
             <div class="valid-feedback">
-                Valid
+                <?php echo $valid_feedback ?>
             </div>
             <div class="invalid-feedback">
-                You must fill out this input
+                <?php echo $invalid_feedback ?>
             </div>
         </div>
 
@@ -69,6 +70,24 @@
     }
     ?>
 
+        <div class="row">
+            <div class="col-lg-12">
+                <form method="GET" action="search.php" class="needs-validation" novalidate>
+                    <div class="form-group">
+                        <label for="query">Search items by name</label>
+                        <input type="text" name="query" class="form-control" required>
+                        <div class="valid-feedback">
+                            <?php echo $valid_feedback ?>
+                        </div>
+                        <div class="invalid-feedback">
+                            <?php echo $invalid_feedback ?>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+            </div>
+        </div>
+        <hr>
         <div class="row">
         <div class="col-lg-12">
             <?php

@@ -10,7 +10,11 @@ class UsersModel extends DBconn{
         $stmt->execute();
 
         $usersCount = $stmt->rowCount();
-        echo '<h2 class="w-100">There are ' . $usersCount . ' users</h2>';
+        if($usersCount == 1){
+            echo "<h2 class='w-100'>There is {$usersCount} user</h2>";
+        } else {
+            echo "<h2 class='w-100'>There are {$usersCount} users</h2>";
+        }
 
         if($stmt->rowCount() > 0 ){
             $results = $stmt->fetchAll();
@@ -81,7 +85,11 @@ class UsersModel extends DBconn{
         $stmt->execute();
 
         $usersCount = $stmt->rowCount();
-        echo '<h2 class="w-100">There are ' . $usersCount . ' admins</h2>';
+        if($usersCount == 1){
+            echo "<h2 class='w-100'>There is {$usersCount} admin user</h2>";
+        } else {
+            echo "<h2 class='w-100'>There are {$usersCount} admin users</h2>";
+        }
 
         if($stmt->rowCount() > 0){
             $results = $stmt->fetchAll();
@@ -102,7 +110,11 @@ class UsersModel extends DBconn{
         $stmt->execute();
 
         $usersCount = $stmt->rowCount();
-        echo '<h2 class="w-100">There are ' . $usersCount . ' normal users</h2>';
+        if($usersCount == 1){
+            echo "<h2 class='w-100'>There is {$usersCount} normal user</h2>";
+        } else {
+            echo "<h2 class='w-100'>There are {$usersCount} normal users</h2>";
+        }
 
         if($stmt->rowCount() > 0){
             $results = $stmt->fetchAll();
@@ -141,29 +153,60 @@ class UsersModel extends DBconn{
 
     //delete
     protected function setDeleteUser(){
-        $userID = filter_input(INPUT_POST, 'deleteUserID');
-        $deleteUserBtn = filter_input(INPUT_POST, 'deleteUserBtn');
 
-        if(isset($deleteUserBtn)){
-        if($userID == 1){
-            $_SESSION['sessMSG'] = "<div class='alert alert-danger'>This user is the root admin and cannot be deleted</div>"; 
-            header("location: users.php");
-        } else {
-        $sql = "DELETE FROM oopphp_users WHERE userID = ?";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam(1, $userID, PDO::PARAM_INT);
-        $stmt->execute();
+        try{
+            $pdo = $this->connect();
 
-        
-            if($stmt->rowCount() > 0){
-                $_SESSION['sessMSG'] = "<div class='alert alert-success'>User with ID {$userID} deleted.</div>"; 
+            //begin transaction
+            $pdo->beginTransaction();
+
+            $userID = filter_input(INPUT_POST, 'deleteUserID');
+            $deleteUserBtn = filter_input(INPUT_POST, 'deleteUserBtn');
+
+            if($userID == 1){
+                $_SESSION['sessMSG'] = "<div class='alert alert-danger'>This user is the root admin and cannot be deleted</div>"; 
                 header("location: users.php");
             } else {
-                $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Error. User with ID {$userID} not deleted.</div>"; 
-                header("location: users.php");
+                $sql = "DELETE FROM oopphp_users WHERE userID = ?";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindParam(1, $userID, PDO::PARAM_INT);
+                $stmt->execute();
             }
+
+            //delete wishlist if user deletes account
+            $userID_fk = filter_input(INPUT_POST, 'deleteUserID');
+
+            $sql = "DELETE FROM oopphp_wishlist WHERE userID_fk = ?";
+            $stmt2 = $pdo->prepare($sql);
+            $stmt2->bindParam(1, $userID_fk, PDO::PARAM_INT);
+            $stmt2->execute();
+
+            $pdo->commit();
+
         }
+        catch(Exception $e){
+            $pdo->rollBack();
+            echo $e->getMessage();
         }
+        finally{
+            //destory session if the user deletes own account. or else the session will still have the user info saved
+            if(isset($_SESSION['uid']) && $_SESSION['uid'] == $userID){
+                session_unset();
+                session_destroy();
+
+                //start it again to be able to display messages
+                session_start();
+            }
+            if(isset($deleteUserBtn)){
+                if($stmt->rowCount() > 0){
+                    $_SESSION['sessMSG'] = "<div class='alert alert-success'>User with ID {$userID} deleted.</div>"; 
+                    header("location: users.php");
+                } else {
+                    $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Error. User with ID {$userID} not deleted.</div>"; 
+                    header("location: users.php");
+                }
+            }
+        }  
     }
 
     //update general
@@ -239,3 +282,30 @@ class UsersModel extends DBconn{
     }
 }
 }
+
+/*
+delete original:
+$userID = filter_input(INPUT_POST, 'deleteUserID');
+        $deleteUserBtn = filter_input(INPUT_POST, 'deleteUserBtn');
+
+        if(isset($deleteUserBtn)){
+        if($userID == 1){
+            $_SESSION['sessMSG'] = "<div class='alert alert-danger'>This user is the root admin and cannot be deleted</div>"; 
+            header("location: users.php");
+        } else {
+        $sql = "DELETE FROM oopphp_users WHERE userID = ?";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(1, $userID, PDO::PARAM_INT);
+        $stmt->execute();
+
+        
+            if($stmt->rowCount() > 0){
+                $_SESSION['sessMSG'] = "<div class='alert alert-success'>User with ID {$userID} deleted.</div>"; 
+                header("location: users.php");
+            } else {
+                $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Error. User with ID {$userID} not deleted.</div>"; 
+                header("location: users.php");
+            }
+        }
+        }
+*/

@@ -2,7 +2,8 @@
     include 'includes/autoLoaderClasses.php';
 
     include 'includes/session.php';
-    include 'includes/config.php';
+	include 'includes/config.php';
+	include 'includes/variables.php';
 ?>
 
 <!DOCTYPE html>

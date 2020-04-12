@@ -3,6 +3,7 @@
 
     include 'includes/session.php';
     include 'includes/config.php';
+    include 'includes/variables.php';
 ?>
 
 <!DOCTYPE html>
@@ -16,6 +17,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
+
                 <?php
                     $loginObject = new LoginController();
                     $loginObject->loginUser();
