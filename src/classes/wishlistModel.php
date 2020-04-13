@@ -1,8 +1,9 @@
 <?php
 class WishlistModel extends DBconn{
     protected function getWishlistAccount(){
-        
-        $userID = $_SESSION['uid'];
+        if(isset($_SESSION['uid'])){
+            $userID = $_SESSION['uid'];
+        }
 
         if(isset($userID)){
         $sql = "SELECT * FROM oopphp_wishlist WHERE userID_fk = ? ORDER BY itemID_fk ASC";

@@ -53,7 +53,9 @@ class UsersModel extends DBconn{
 
     //specific user for my-account.php
     protected function getMyUser(){
-        $userID = $_SESSION['uid'];
+        if(isset($_SESSION['uid'])){
+            $userID = $_SESSION['uid'];
+        }
 
         if(isset($userID)){
 

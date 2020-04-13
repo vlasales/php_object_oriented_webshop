@@ -4,6 +4,7 @@
     
 		switch($environment){
 			case 'development':
+				ob_start();
 				//php info and version
 				// prints e.g. 'Current PHP version: 4.1.1'
 				echo 'Current PHP version: ' . phpversion();
@@ -56,7 +57,8 @@
 			break;
 			
 			case 'production':
-				//do nothing
+				//fix for "Warning: Cannot modify header information - headers already sent by". ONLY SHOWS ONLINE AND NOT LOCALLY
+				ob_start();
 				break;
 				
 			default:

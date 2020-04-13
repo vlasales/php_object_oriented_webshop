@@ -9,14 +9,14 @@ class LogoutModel extends DBconn{
                     //must start a session again to be able to display the message
                     session_start();
                     $_SESSION['sessMSG'] = "<div class='alert alert-success'>You are now logged out.</div>";
-                    header('location:index.php');
+                    header('location: index.php');
             } else {
                 $_SESSION['sessMSG'] = "<div class='alert alert-danger'>No userlogin set.</div>";
-                header('location:index.php');
+                header('location: index.php');
             }
         } else {
             $_SESSION['sessMSG'] = "<div class='alert alert-danger'>No logout set.</div>";
-            header('location:index.php');
+            header('location: index.php');
         }
     }
 }

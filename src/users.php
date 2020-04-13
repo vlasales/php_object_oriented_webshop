@@ -57,6 +57,24 @@
 -->
 <div class="row">
     <div class="col-lg-12">
+                <form method="GET" action="search.php" class="needs-validation" novalidate>
+                    <div class="form-group">
+                        <label for="query">Search user by name</label>
+                        <input type="text" name="userName" class="form-control" required>
+                        <div class="valid-feedback">
+                            <?php echo $valid_feedback ?>
+                        </div>
+                        <div class="invalid-feedback">
+                            <?php echo $invalid_feedback ?>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+            </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-lg-12">
         <h1>List of users</h1>
     </div>
 </div>

@@ -4,7 +4,7 @@
             <p>PHP Webshop</p>
         </div>
         <div class="col-lg-12 text-center">
-            <p>Copyright &#169;</p>
+            <p>Copyright &#169;<?php echo date('Y') ?></p>
         </div>
     </div>
 </footer>

@@ -23,7 +23,7 @@ class LoginModel extends DBconn{
                         $_SESSION['isAdmin'] = $isAdmin;
                     }
                     $_SESSION['sessMSG'] = "<div class='alert alert-success'>Your are now logged in</div>";
-                    header('location:my-account.php');
+                    header('location: my-account.php');
                 } else {
                     $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Wrong username/password combination.</div>";
                     header('location: signup.php');

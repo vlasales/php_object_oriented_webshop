@@ -1,5 +1,8 @@
 <?php
-    include 'includes/autoLoaderClasses.php';
+    //include 'includes/autoLoaderClasses.php';
+    var_dump(__DIR__); echo '<br>';
+    require_once __DIR__ . '/includes/autoLoaderClasses.php';
+    
 
     include 'includes/session.php';
     include 'includes/config.php';
@@ -75,7 +78,7 @@
                 <form method="GET" action="search.php" class="needs-validation" novalidate>
                     <div class="form-group">
                         <label for="query">Search items by name</label>
-                        <input type="text" name="query" class="form-control" required>
+                        <input type="text" name="itemName" class="form-control" required>
                         <div class="valid-feedback">
                             <?php echo $valid_feedback ?>
                         </div>

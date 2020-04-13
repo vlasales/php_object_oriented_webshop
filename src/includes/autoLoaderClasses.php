@@ -9,7 +9,5 @@ function autoLoadFiles($className){
 
     if(file_exists($filename)){
         include_once $path . $className . $extension;
-    } else {
-        echo 'Class not found';
     }
 }
