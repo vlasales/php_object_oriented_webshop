@@ -23,7 +23,7 @@
                 $sessMSG2->session_message();
             ?>
                 <h1>Sign up</h1>
-                <form method="POST" action="users.php" class="needs-validation" novalidate>
+                <form method="POST" action="users.php" enctype="multipart/form-data" class="needs-validation" novalidate>
                     <div class="form-group">
                     <label for="name">Name</label>
                     <input type="text" name="newUsername" class="form-control" required>
@@ -43,6 +43,10 @@
                     <div class="invalid-feedback">
                         <?php echo $invalid_feedback ?>
                     </div>
+            </div>
+            <div class="form-group">
+                <label for="userImage" class="w-100">Image - Must be png, jpeg or jpg.</label>
+                <input type="file" name="newUserImage" accept="image/png, image/jpeg, image/jpg">
             </div>
                     <button type="submit" name="newUserBtn" class="btn btn-success">Create user</button>
                 </form>

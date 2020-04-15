@@ -5,6 +5,7 @@
 		switch($environment){
 			case 'development':
 				ob_start();
+				
 				//php info and version
 				// prints e.g. 'Current PHP version: 4.1.1'
 				echo 'Current PHP version: ' . phpversion();
@@ -32,6 +33,8 @@
 				print_r($_GET); echo '<br>';
 				print_r('POST: ');
 				print_r($_POST); echo '<br>';
+				print_r('FILES: ');
+				print_r($_FILES); echo '<br>';
 	
 				echo 'login status: ';
 				if(isset($_SESSION['uid'])){
@@ -54,6 +57,7 @@
 				} else {
 					$page_title = 'PHP webshop';
 				}
+
 			break;
 			
 			case 'production':

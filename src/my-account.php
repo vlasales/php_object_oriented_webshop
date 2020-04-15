@@ -38,7 +38,7 @@
             <div class="col-lg-6">
                 <?php
                     $wishlistView = new WishlistView();
-                    $wishlistView->showWishlist();
+                    $wishlistView->showWishlistAccount();
                 ?>
                 <?php
                     $wishlistObject = new WishlistController();

@@ -51,8 +51,6 @@ class WishlistModel extends DBconn{
             $results = $stmt->fetchAll();
             $itemCount = $stmt->rowCount();
 
-            
-
             if($wishlistIsPublic == 1) {
                 if($itemCount > 0) {
                     if($itemCount == 1){
@@ -72,6 +70,9 @@ class WishlistModel extends DBconn{
 
     //add to wishlist
     protected function setToWishlist(){
+        $addItemToWishlistBtn = filter_input(INPUT_POST, 'addItemToWishlistBtn');
+
+        if(isset($addItemToWishlistBtn)){
         if(isset($_SESSION['uid'])){
             $userID_fk = $_SESSION['uid'];
         }
@@ -79,16 +80,19 @@ class WishlistModel extends DBconn{
         $itemName_fk = htmlentities(filter_input(INPUT_POST, 'wishlistName'));
         $itemDescription_fk = htmlentities(filter_input(INPUT_POST, 'wishlistDescription'));
         $itemPrice_fk = htmlentities(filter_input(INPUT_POST, 'wishlistPrice'));
-        $addItemToWishlistBtn = filter_input(INPUT_POST, 'addItemToWishlistBtn');
+        $itemStock_fk = htmlentities(filter_input(INPUT_POST, 'wishlistStock'));
+        $itemImagePath_fk = htmlentities(filter_input(INPUT_POST, 'wishlistImagePath'));
 
-        if(isset($addItemToWishlistBtn)){
-            $sql = "INSERT INTO oopphp_wishlist(userID_fk, itemID_fk, itemName_fk, itemDescription_fk, itemPrice_fk) VALUES(?,?,?,?,?)";
+        
+            $sql = "INSERT INTO oopphp_wishlist(userID_fk, itemID_fk, itemName_fk, itemDescription_fk, itemPrice_fk, itemStock_fk, itemImagePath_fk) VALUES(?,?,?,?,?,?,?)";
             $stmt = $this->connect()->prepare($sql);
             $stmt->bindParam(1, $userID_fk, PDO::PARAM_INT);
             $stmt->bindParam(2, $itemID_fk, PDO::PARAM_INT);
             $stmt->bindParam(3, $itemName_fk, PDO::PARAM_STR);
             $stmt->bindParam(4, $itemDescription_fk, PDO::PARAM_STR);
             $stmt->bindParam(5, $itemPrice_fk, PDO::PARAM_STR);
+            $stmt->bindParam(6, $itemStock_fk, PDO::PARAM_INT);
+            $stmt->bindParam(7, $itemImagePath_fk, PDO::PARAM_STR);
             $stmt->execute();
 
             if($stmt->rowCount() > 0){
@@ -103,12 +107,13 @@ class WishlistModel extends DBconn{
 
     //delete from wishlist
     protected function setDeleteItemWishlist(){
-        //delete
-        $insertID = filter_input(INPUT_POST, 'wishlistInsertID');
-        $itemID = filter_input(INPUT_POST, 'wishlisteItemID');
         $deleteItemBtn = filter_input(INPUT_POST, 'deleteWishlistItemBtn');
 
         if(isset($deleteItemBtn)){
+        //delete
+        $insertID = filter_input(INPUT_POST, 'wishlistInsertID');
+        $itemID = filter_input(INPUT_POST, 'wishlisteItemID');
+
         $sql = "DELETE FROM oopphp_wishlist WHERE insertID = ?";
         $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam(1, $insertID, PDO::PARAM_INT);
@@ -126,10 +131,11 @@ class WishlistModel extends DBconn{
 
     //set wishlist public
     protected function setWishlistPublic(){
-        $userID = htmlentities(filter_input(INPUT_POST, 'wishlistPublicID'));
         $wishlistPublicBtn = filter_input(INPUT_POST, 'makeWishlistPublic');
 
         if(isset($wishlistPublicBtn)){
+        $userID = htmlentities(filter_input(INPUT_POST, 'wishlistPublicID'));
+    
         $sql = "UPDATE oopphp_users SET wishlistIsPublic = 1 WHERE userID = ?";
         $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam(1, $userID, PDO::PARAM_INT);
@@ -148,10 +154,11 @@ class WishlistModel extends DBconn{
 
     //wishlist private
     protected function setWishlistPrivate(){
-        $userID = htmlentities(filter_input(INPUT_POST, 'wishlistPrivateID'));
         $wishlistPrivateBtn = filter_input(INPUT_POST, 'makeWishlistPrivate');
 
         if(isset($wishlistPrivateBtn)){
+        $userID = htmlentities(filter_input(INPUT_POST, 'wishlistPrivateID'));
+        
         $sql = "UPDATE oopphp_users SET wishlistIsPublic = 0 WHERE userID = ?";
         $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam(1, $userID, PDO::PARAM_INT);

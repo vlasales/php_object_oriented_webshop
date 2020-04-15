@@ -109,6 +109,7 @@
             $usersObject->makeUserAdmin();
             $usersObject->removeUserAdmin();
         $usersObject->deleteUser();
+            $usersObject->deleteImage();
     ?>
     <?php include 'includes/content/footer.php' ?>
     <?php include 'includes/content/scripts.php' ?>

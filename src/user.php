@@ -26,7 +26,7 @@
                 <h2>Wishlist</h2>
                     <?php
                         $wishlistView = new WishlistView();
-                        $wishlistView->showWishlist2();
+                        $wishlistView->showWishlistUser();
                     ?>
             </div>
         </div>

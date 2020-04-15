@@ -15,6 +15,10 @@
 	<?php include 'includes/content/navbar.php' ?>
 
 	<div class="container-fluid">
+    <?php
+            $sessMSG2 = new Functions();
+            $sessMSG2->session_message();
+        ?>
     <div class="row">
             <div class="col-lg-6">
                 <form method="GET" action="search.php" class="needs-validation" novalidate>
@@ -30,6 +34,7 @@
                     </div>
                     <button type="submit" class="btn btn-primary">Search</button>
                 </form>
+                <hr>
             </div>
             <div class="col-lg-6">
                 <form method="GET" action="search.php" class="needs-validation" novalidate>
@@ -45,9 +50,10 @@
                     </div>
                     <button type="submit" class="btn btn-primary">Search</button>
                 </form>
+                <hr>
             </div>
+            <hr>
         </div>
-        <hr>
 		<div class="row">
             <div class="col-lg-6">
                 <?php
@@ -61,7 +67,12 @@
                 ?>
             </div>
 		</div>
-	</div>
+    </div>
+    <?php   
+        $itemObject = new ItemsController();
+        $itemObject->updateItem();
+        $itemObject->deleteItem();
+    ?>
 	
 	<?php include 'includes/content/footer.php' ?>
 	<?php include 'includes/content/scripts.php' ?>

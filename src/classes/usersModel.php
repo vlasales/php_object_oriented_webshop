@@ -6,7 +6,7 @@ class UsersModel extends DBconn{
         $stmt->bindParam(1, $userID, PDO::PARAM_INT);
         $stmt->bindParam(2, $userName, PDO::PARAM_STR);
         $stmt->bindParam(3, $userPasswordHash, PDO::PARAM_STR);
-        //$stmt->bindParam(4, $isAdmin, PDO::PARAM_STR);
+        $stmt->bindParam(4, $isAdmin, PDO::PARAM_INT);
         $stmt->execute();
 
         $usersCount = $stmt->rowCount();
@@ -24,17 +24,15 @@ class UsersModel extends DBconn{
             //header("location: users.php");
         }
     }
+
     //specific user
     protected function getUserWhere(){
         $userID = filter_input(INPUT_GET, 'id');
 
         if(isset($userID)){
-            //$userID = $_GET['id'];
-
             $sql = "SELECT * FROM oopphp_users WHERE userID = ?";
             $stmt = $this->connect()->prepare($sql);
             $stmt->bindParam(1, $userID, PDO::PARAM_INT);
-            //$stmt->bindParam(4, $isAdmin, PDO::PARAM_STR);
             $stmt->execute();
 
             if($stmt->rowCount() > 0 ){
@@ -58,11 +56,9 @@ class UsersModel extends DBconn{
         }
 
         if(isset($userID)){
-
             $sql = "SELECT * FROM oopphp_users WHERE userID = ?";
             $stmt = $this->connect()->prepare($sql);
             $stmt->bindParam(1, $userID, PDO::PARAM_INT);
-            //$stmt->bindParam(4, $isAdmin, PDO::PARAM_STR);
             $stmt->execute();
 
             if($stmt->rowCount() > 0 ){
@@ -73,7 +69,6 @@ class UsersModel extends DBconn{
                 header("location: users.php");
             }
         }
-        
     }
 
     //user where admin
@@ -83,7 +78,7 @@ class UsersModel extends DBconn{
         $stmt->bindParam(1, $userID, PDO::PARAM_INT);
         $stmt->bindParam(2, $userName, PDO::PARAM_STR);
         $stmt->bindParam(3, $userPasswordHash, PDO::PARAM_STR);
-        //$stmt->bindParam(4, $isAdmin, PDO::PARAM_STR);
+        $stmt->bindParam(4, $isAdmin, PDO::PARAM_INT);
         $stmt->execute();
 
         $usersCount = $stmt->rowCount();
@@ -108,7 +103,7 @@ class UsersModel extends DBconn{
         $stmt->bindParam(1, $userID, PDO::PARAM_INT);
         $stmt->bindParam(2, $userName, PDO::PARAM_STR);
         $stmt->bindParam(3, $userPasswordHash, PDO::PARAM_STR);
-        //$stmt->bindParam(4, $isAdmin, PDO::PARAM_STR);
+        $stmt->bindParam(4, $isAdmin, PDO::PARAM_INT);
         $stmt->execute();
 
         $usersCount = $stmt->rowCount();
@@ -129,17 +124,48 @@ class UsersModel extends DBconn{
 
     //insert
     protected function setUser(){
+        $newUserBtn = filter_input(INPUT_POST, 'newUserBtn');
+
+        if(isset($newUserBtn)){
         $userName = htmlentities(filter_input(INPUT_POST, 'newUsername'));
         $userPassword = htmlentities(filter_input(INPUT_POST, 'newUserpassword'));
         $userPasswordHash = password_hash($userPassword, PASSWORD_DEFAULT);
 
-        $newUserBtn = filter_input(INPUT_POST, 'newUserBtn');
+        //file
+        $maxFileSize = 80000000;
+        $imageName = $_FILES["newUserImage"]["name"];
+	    $target_dir = "images/imagesUsers/";
+        $target_file = $target_dir . basename($imageName);
+        $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+        $extensions_arr = array("jpg","jpeg","png");
 
-        if(isset($newUserBtn)){
-            $sql = "INSERT INTO oopphp_users(userName, userPassword_hash) VALUES (?,?)";
+        if(!file_exists($target_file)){
+            if(in_array($imageFileType, $extensions_arr)){
+                if(($_FILES["newUserImage"]["size"] >= $maxFileSize) || ($_FILES["newUserImage"]["size"] == 0)) {
+                    $_SESSION["sessMSG"] = "<div class='alert alert-danger'>File too large. {$maxFileSize}KB is the max file size.</div>";
+                    header('location: signup.php');
+                } else {
+                    if(move_uploaded_file($_FILES["newUserImage"]["tmp_name"],$target_file)){
+                        $imageUpload = $target_file;
+                    } else {
+                        $_SESSION["sessMSG"] = "<div class='alert alert-danger'>Error. Image '{$imageName}' not uploaded.</div>";
+                        header('location: signup.php');
+                    }
+                }
+            } else {
+                $_SESSION["sessMSG"] = "<div class='alert alert-danger'>File extension must be jpg, png or jpeg. '{$imageFileType}' is not a valid extension.</div>";
+                header('location: signup.php');
+            }
+        } else {
+            $_SESSION["sessMSG"] = "<div class='alert alert-danger'>A file with the name '{$imageName}' already exists. Please choose another name.</div>";
+            header('location: signup.php');
+        }
+
+            $sql = "INSERT INTO oopphp_users(userName, userPassword_hash, userImagePath) VALUES (?,?,?)";
             $stmt = $this->connect()->prepare($sql);
             $stmt->bindParam(1, $userName, PDO::PARAM_STR);
             $stmt->bindParam(2, $userPasswordHash, PDO::PARAM_STR);
+            $stmt->bindParam(3, $imageUpload, PDO::PARAM_STR);
             $stmt->execute();
         
 
@@ -155,7 +181,9 @@ class UsersModel extends DBconn{
 
     //delete
     protected function setDeleteUser(){
+        $deleteUserBtn = filter_input(INPUT_POST, 'deleteUserBtn');
 
+        if(isset($deleteUserBtn)){
         try{
             $pdo = $this->connect();
 
@@ -163,7 +191,7 @@ class UsersModel extends DBconn{
             $pdo->beginTransaction();
 
             $userID = filter_input(INPUT_POST, 'deleteUserID');
-            $deleteUserBtn = filter_input(INPUT_POST, 'deleteUserBtn');
+            
 
             if($userID == 1){
                 $_SESSION['sessMSG'] = "<div class='alert alert-danger'>This user is the root admin and cannot be deleted</div>"; 
@@ -184,6 +212,10 @@ class UsersModel extends DBconn{
             $stmt2->execute();
 
             $pdo->commit();
+
+            //delete image
+            $deleteUserImage = htmlentities(filter_input(INPUT_POST, 'deleteUserImage'));
+            unlink($deleteUserImage);
 
         }
         catch(Exception $e){
@@ -208,22 +240,95 @@ class UsersModel extends DBconn{
                     header("location: users.php");
                 }
             }
-        }  
+        }
+    }
+    }
+
+    //delete image
+    protected function setDeleteImage(){
+        $deleteImageBtn = filter_input(INPUT_POST, 'deleteImageBtn');
+        
+        if(isset($deleteImageBtn)){
+            $userID = htmlentities(filter_input(INPUT_POST, 'deleteUserImageID'));
+
+            //deleting image is actually an update. or else you delete the whole user
+            $sql = "UPDATE oopphp_users SET userImagePath = null WHERE userID = ?";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam(1, $userID, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $deleteImageUser = htmlentities(filter_input(INPUT_POST, 'deleteImageUser'));
+            unlink($deleteImageUser);
+
+            if(isset($deleteImageBtn)){
+                if($stmt->rowCount() > 0){
+                    $_SESSION['sessMSG'] = "<div class='alert alert-success'>User with ID {$userID} image deleted.</div>"; 
+                    header("location: users.php");
+                } else {
+                    $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Error. User with ID {$userID} image not deleted.</div>"; 
+                    header("location: users.php");
+                }
+            }
+        }
     }
 
     //update general
     protected function setUpdateUser(){
-        $userID = htmlentities(filter_input(INPUT_POST, 'updateUserID'));
-        $userName = htmlentities(filter_input(INPUT_POST, 'updateUserName'));
         $updateUserBtn = filter_input(INPUT_POST, 'updateUserBtn');
 
         if(isset($updateUserBtn)){
-        $sql = "UPDATE oopphp_users SET userName = ? WHERE userID = ?";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam(1, $userName, PDO::PARAM_STR);
-        $stmt->bindParam(2, $userID, PDO::PARAM_INT);
-        $stmt->execute();
+            $maxFileSize = 80000000;
+            $imageName = $_FILES["updateUserImage"]["name"];
+            $target_dir = "images/imagesUsers/";
+            $target_file = $target_dir . basename($imageName);
+            $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+            $extensions_arr = array("jpg","jpeg","png");
+    
+            if(!file_exists($target_file)){
+                if(in_array($imageFileType, $extensions_arr)){
+                    if(($_FILES["updateUserImage"]["size"] >= $maxFileSize) || ($_FILES["updateUserImage"]["size"] == 0)) {
+                        $_SESSION["sessMSG"] = "<div class='alert alert-danger'>File too large. {$maxFileSize}KB is the max file size.</div>";
+                        header('location: signup.php');
+                    } else {
+                        if(move_uploaded_file($_FILES["updateUserImage"]["tmp_name"],$target_file)){
+                            $imageUpload = $target_file;
+                        } else {
+                            $_SESSION["sessMSG"] = "<div class='alert alert-danger'>Error. Image '{$imageName}' not uploaded.</div>";
+                            header('location: signup.php');
+                        }
+                    }
+                } else {
+                    $_SESSION["sessMSG"] = "<div class='alert alert-danger'>File extension must be jpg, png or jpeg. '{$imageFileType}' is not a valid extension.</div>";
+                    header('location: signup.php');
+                }
+            } else {
+                $_SESSION["sessMSG"] = "<div class='alert alert-danger'>A file with the name '{$imageName}' already exists. Please choose another name.</div>";
+                header('location: signup.php');
+            }
 
+        $userID = htmlentities(filter_input(INPUT_POST, 'updateUserID'));
+        $userName = htmlentities(filter_input(INPUT_POST, 'updateUserName'));
+        
+        if(isset($imageUpload)){
+            $sql = "UPDATE oopphp_users SET userName = ?, userImagePath = ? WHERE userID = ?";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam(1, $userName, PDO::PARAM_STR);
+            $stmt->bindParam(2, $imageUpload, PDO::PARAM_STR);
+            $stmt->bindParam(3, $userID, PDO::PARAM_INT);
+            $stmt->execute();
+        } else {
+            $sql = "UPDATE oopphp_users SET userName = ? WHERE userID = ?";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam(1, $userName, PDO::PARAM_STR);
+            $stmt->bindParam(2, $userID, PDO::PARAM_INT);
+            $stmt->execute();
+        }
+        
+        //only delete image if there is an upload file
+        $updateUserRemove = htmlentities(filter_input(INPUT_POST, 'updateUserRemove'));
+        if(isset($imageUpload)){
+            unlink($updateUserRemove);
+        }
         
             if($stmt->rowCount() > 0){
                 $_SESSION['sessMSG'] = "<div class='alert alert-success'>User with ID {$userID} updated.</div>"; 
@@ -237,10 +342,11 @@ class UsersModel extends DBconn{
 
     //update - make admin
     protected function setUserAdmin(){
-        $userID = filter_input(INPUT_POST, 'userIDMakeAdmin');
         $makeAdminBtn = filter_input(INPUT_POST, 'userMakeAdmin');
 
         if(isset($makeAdminBtn)){
+        $userID = filter_input(INPUT_POST, 'userIDMakeAdmin');
+
         $sql = "UPDATE oopphp_users SET isAdmin = 1 WHERE userID = ?";
         $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam(1, $userID, PDO::PARAM_INT);
@@ -259,10 +365,11 @@ class UsersModel extends DBconn{
 
     //update - remove admin
     protected function setUserRemoveAdmin(){
+        $removeAdminBtn = filter_input(INPUT_POST, 'userRemoveAdmin');
+
+        if(isset($removeAdminBtn)){
         $userID = filter_input(INPUT_POST, 'userIDRemoveAdmin');
-        $makeAdminBtn = filter_input(INPUT_POST, 'userRemoveAdmin');
-        
-        if(isset($makeAdminBtn)){
+    
         if($userID == 1){
             $_SESSION['sessMSG'] = "<div class='alert alert-danger'>This user is the root admin and cannot be removed as admin.</div>"; 
             header("location: users.php");
