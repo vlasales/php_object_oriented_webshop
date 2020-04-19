@@ -133,8 +133,9 @@ class UsersModel extends DBconn{
 
         //file
         $maxFileSize = 80000000;
-        $imageName = $_FILES["newUserImage"]["name"];
-	    $target_dir = "images/imagesUsers/";
+        $unixTimeStamp = new DateTime();
+        $imageName = $unixTimeStamp->getTimestamp() . '-' . $_FILES["newUserImage"]["name"];
+        $target_dir = "images/imagesUsers/";
         $target_file = $target_dir . basename($imageName);
         $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
         $extensions_arr = array("jpg","jpeg","png");
@@ -145,7 +146,8 @@ class UsersModel extends DBconn{
                     $_SESSION["sessMSG"] = "<div class='alert alert-danger'>File too large. {$maxFileSize}KB is the max file size.</div>";
                     header('location: signup.php');
                 } else {
-                    if(move_uploaded_file($_FILES["newUserImage"]["tmp_name"],$target_file)){
+                    //rename($target_file, $target_file . $date->getTimestamp());
+                    if(move_uploaded_file($_FILES["newUserImage"]["tmp_name"], $target_file)){
                         $imageUpload = $target_file;
                     } else {
                         $_SESSION["sessMSG"] = "<div class='alert alert-danger'>Error. Image '{$imageName}' not uploaded.</div>";
@@ -157,6 +159,7 @@ class UsersModel extends DBconn{
                 header('location: signup.php');
             }
         } else {
+            //will probably never show, due to timestamps
             $_SESSION["sessMSG"] = "<div class='alert alert-danger'>A file with the name '{$imageName}' already exists. Please choose another name.</div>";
             header('location: signup.php');
         }
@@ -278,7 +281,8 @@ class UsersModel extends DBconn{
 
         if(isset($updateUserBtn)){
             $maxFileSize = 80000000;
-            $imageName = $_FILES["updateUserImage"]["name"];
+            $unixTimeStamp = new DateTime();
+            $imageName = $unixTimeStamp->getTimestamp() . '-' . $_FILES["updateUserImage"]["name"];
             $target_dir = "images/imagesUsers/";
             $target_file = $target_dir . basename($imageName);
             $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
@@ -288,22 +292,22 @@ class UsersModel extends DBconn{
                 if(in_array($imageFileType, $extensions_arr)){
                     if(($_FILES["updateUserImage"]["size"] >= $maxFileSize) || ($_FILES["updateUserImage"]["size"] == 0)) {
                         $_SESSION["sessMSG"] = "<div class='alert alert-danger'>File too large. {$maxFileSize}KB is the max file size.</div>";
-                        header('location: signup.php');
+                        header('location: my-account.php');
                     } else {
-                        if(move_uploaded_file($_FILES["updateUserImage"]["tmp_name"],$target_file)){
+                        if(move_uploaded_file($_FILES["updateUserImage"]["tmp_name"], $target_file)){
                             $imageUpload = $target_file;
                         } else {
                             $_SESSION["sessMSG"] = "<div class='alert alert-danger'>Error. Image '{$imageName}' not uploaded.</div>";
-                            header('location: signup.php');
+                            header('location: my-account.php');
                         }
                     }
                 } else {
                     $_SESSION["sessMSG"] = "<div class='alert alert-danger'>File extension must be jpg, png or jpeg. '{$imageFileType}' is not a valid extension.</div>";
-                    header('location: signup.php');
+                    header('location: my-account.php');
                 }
             } else {
                 $_SESSION["sessMSG"] = "<div class='alert alert-danger'>A file with the name '{$imageName}' already exists. Please choose another name.</div>";
-                header('location: signup.php');
+                header('location: my-account.php');
             }
 
         $userID = htmlentities(filter_input(INPUT_POST, 'updateUserID'));
@@ -332,10 +336,10 @@ class UsersModel extends DBconn{
         
             if($stmt->rowCount() > 0){
                 $_SESSION['sessMSG'] = "<div class='alert alert-success'>User with ID {$userID} updated.</div>"; 
-                header("location: users.php");
+                header("location: my-account.php");
             } else {
                 $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Error. User with ID {$userID} not updated.</div>"; 
-                header("location: users.php");
+                header("location: my-account.php");
             }
         }
     }

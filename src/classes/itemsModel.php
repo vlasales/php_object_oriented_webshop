@@ -61,7 +61,8 @@ class ItemsModel extends DBconn{
 
         //file
         $maxFileSize = 80000000;
-        $imageName = $_FILES["newItemImage"]["name"];
+        $unixTimeStamp = new DateTime();
+        $imageName = $unixTimeStamp->getTimestamp() . '-' . $_FILES["newItemImage"]["name"];
 	    $target_dir = "images/imagesItems/";
         $target_file = $target_dir . basename($imageName);
         $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
@@ -166,7 +167,8 @@ class ItemsModel extends DBconn{
         if(isset($updateItemBtn)){
         try{
         $maxFileSize = 80000000;
-        $imageName = $_FILES["updateItemImage"]["name"];
+        $unixTimeStamp = new DateTime();
+        $imageName = $unixTimeStamp->getTimestamp() . '-' .  $_FILES["updateItemImage"]["name"];
 	    $target_dir = "images/imagesItems/";
         $target_file = $target_dir . basename($imageName);
         $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
