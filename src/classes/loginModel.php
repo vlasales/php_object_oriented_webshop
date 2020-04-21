@@ -1,6 +1,7 @@
 <?php
 class LoginModel extends DBconn{
     protected function getLoginInfo(){
+        try{
         $loginBtn = filter_input(INPUT_POST, 'loginBtn');
 
         if(isset($loginBtn)){
@@ -28,17 +29,25 @@ class LoginModel extends DBconn{
                     }
                     $_SESSION['sessMSG'] = "<div class='alert alert-success'>Your are now logged in</div>";
                     header('location: my-account.php');
+                    exit();
                 } else {
                     $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Wrong username/password combination.</div>";
                     header('location: signup.php');
+                    exit();
                 }
             } else {
                 $_SESSION['sessMSG'] = "<div class='alert alert-danger'>No user with that username exists. Try another username.</div>";
                 header('location: signup.php');
+                exit();
             }
         } else {
             $_SESSION['sessMSG'] = "<div class='alert alert-danger'>No login set</div>";
             header('location: signup.php');
+            exit();
         }
+    }
+    catch(Exception $e){
+        echo $e->getMessage();
+    }
     }
 }

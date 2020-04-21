@@ -2,6 +2,7 @@
 //model
 class SearchModel extends DBconn{
     protected function getSearchItems(){
+        try{
         $query = filter_input(INPUT_GET, 'itemName');
 
         if(isset($query)){
@@ -31,8 +32,13 @@ class SearchModel extends DBconn{
             }
         }
     }
+    catch(Exception $e){
+        echo $e->getMessage();
+    }
+    }
 
     protected function getSearchUsers(){
+        try{
         $query = filter_input(INPUT_GET, 'userName');
 
         if(isset($query)){
@@ -50,7 +56,7 @@ class SearchModel extends DBconn{
             if($userCount == 1){
                 echo "<h1 class='w-100'>There is {$userCount} user containing: {$displayQuery}</h1>";
             } else {
-                echo "<h1 class='w-100'>There are {$userCount} user containing: {$displayQuery}</h1>";
+                echo "<h1 class='w-100'>There are {$userCount} users containing: {$displayQuery}</h1>";
             }
 
             if($userCount > 0){
@@ -62,4 +68,9 @@ class SearchModel extends DBconn{
             }
         }
     }
+
+catch(Exception $e){
+    echo $e->getMessage();
+}
+}
 }

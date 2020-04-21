@@ -2,35 +2,42 @@
 //model
 class ItemsModel extends DBconn{
     protected function getItems(){
-        $sql = "SELECT * FROM oopphp_items ORDER BY itemID ASC";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam(1, $itemID, PDO::PARAM_INT);
-        $stmt->bindParam(2, $itemName, PDO::PARAM_STR);
-        $stmt->bindParam(3, $itemDescription, PDO::PARAM_STR);
-        $stmt->bindParam(4, $itemPrice, PDO::PARAM_STR);
-        $stmt->bindParam(5, $itemStock, PDO::PARAM_INT);
-        $stmt->execute();
+        try{
+            $sql = "SELECT * FROM oopphp_items ORDER BY itemID ASC";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam(1, $itemID, PDO::PARAM_INT);
+            $stmt->bindParam(2, $itemName, PDO::PARAM_STR);
+            $stmt->bindParam(3, $itemDescription, PDO::PARAM_STR);
+            $stmt->bindParam(4, $itemPrice, PDO::PARAM_STR);
+            $stmt->bindParam(5, $itemStock, PDO::PARAM_INT);
+            $stmt->execute();
 
-        $itemCount = $stmt->rowCount();
-        if($itemCount == 1){
-            echo "<h1 class='w-100 pl-3'>There is {$itemCount} item</h1>";
-        } else {
-            echo "<h1 class='w-100 pl-3'>There are {$itemCount} items</h1>";
+            $itemCount = $stmt->rowCount();
+            if($itemCount == 1){
+                echo "<h1 class='w-100 pl-3'>There is {$itemCount} item</h1>";
+            } else {
+                echo "<h1 class='w-100 pl-3'>There are {$itemCount} items</h1>";
+            }
+
+            if($itemCount > 0){
+                $results = $stmt->fetchAll();
+                return $results;
+            } else {
+                //$_SESSION['sessMSG'] = "<div class='alert alert-danger'>No items in the database.</div>"; 
+                //header("location: index.php");
+            }
         }
-
-        if($itemCount > 0){
-            $results = $stmt->fetchAll();
-            return $results;
-        } else {
-            //$_SESSION['sessMSG'] = "<div class='alert alert-danger'>No items in the database.</div>"; 
-            //header("location: index.php");
+        catch(Exception $e){
+            echo $e->getMessage();
         }
     }
 
     protected function getItemWhere(){
+        try{
         $itemID = filter_input(INPUT_GET, 'id');
         
         if(isset($itemID)){
+            
             $sql = "SELECT * FROM oopphp_items WHERE itemID = ?";
             $stmt = $this->connect()->prepare($sql);
             $stmt->bindParam(1, $itemID, PDO::PARAM_INT);
@@ -42,22 +49,29 @@ class ItemsModel extends DBconn{
             } else {
                 $_SESSION['sessMSG'] = "<div class='alert alert-danger'>An item with the ID of {$itemID} does not exist.</div>"; 
                 header("location: index.php");
+                exit();
             }
         } else {
             $_SESSION['sessMSG'] = "<div class='alert alert-danger'>No item ID selected.</div>"; 
             header("location: index.php");
+            exit();
+        }
+        }
+        catch(Exception $e){
+            echo $e->getMessage();
         }
     }
 
     protected function setItem(){
+        try{
         $newItemBtn = filter_input(INPUT_POST, 'newItemBtn');
         if(isset($newItemBtn)){
+            
         //setting create variables
         $itemName = htmlentities(filter_input(INPUT_POST, 'newItemName'));
         $itemDescription = htmlentities(filter_input(INPUT_POST, 'newItemDescription'));
         $itemPrice = htmlentities(filter_input(INPUT_POST, 'newItemPrice'));
         $itemStock = htmlentities(filter_input(INPUT_POST, 'newItemStock'));
-        
 
         //file
         $maxFileSize = 80000000;
@@ -73,21 +87,19 @@ class ItemsModel extends DBconn{
                 if(($_FILES["newItemImage"]["size"] >= $maxFileSize) || ($_FILES["newItemImage"]["size"] == 0)) {
                     $_SESSION["sessMSG"] = "<div class='alert alert-danger'>File too large. {$maxFileSize}KB is the max file size.</div>";
                     header('location: index.php');
+                    exit();
                 } else {
-                    if(move_uploaded_file($_FILES["newItemImage"]["tmp_name"],$target_file)){
-                        $imageUpload = $target_file;
-                    } else {
-                        $_SESSION["sessMSG"] = "<div class='alert alert-danger'>Error. Image '{$imageName}' not uploaded.</div>";
-                        header('location: index.php');
-                    }
+                    $imageUpload = $target_file;
                 }
             } else {
                 $_SESSION["sessMSG"] = "<div class='alert alert-danger'>File extension must be jpg, png or jpeg. '{$imageFileType}' is not a valid extension.</div>";
                 header('location: index.php');
+                exit();
             }
         } else {
             $_SESSION["sessMSG"] = "<div class='alert alert-danger'>A file with the name '{$imageName}' already exists. Please choose another name.</div>";
             header('location: index.php');
+            exit();
         }
         
         $sql = "INSERT INTO oopphp_items(itemName, itemDescription, itemPrice, itemStock, itemImagePath) VALUES (?,?,?,?,?)";
@@ -98,22 +110,36 @@ class ItemsModel extends DBconn{
             $stmt->bindParam(4, $itemStock, PDO::PARAM_INT);
             $stmt->bindParam(5, $imageUpload, PDO::PARAM_STR);
             $stmt->execute();
+
+            move_uploaded_file($_FILES["newItemImage"]["tmp_name"], $target_file);
         
-        //only show if the button is clicked
-            if($stmt->rowCount() > 0){
-                $_SESSION['sessMSG'] = "<div class='alert alert-success'>Item with name {$itemName} added.</div>"; 
-                header("location: index.php");
-            } else {
-                $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Error. Item name must be unique and the name {$itemName} is already taken.</div>"; 
-                header("location: index.php");
+    }
+        }
+        catch(Exception $e){
+            echo $e->getMessage();
+        }
+        finally{
+            if(isset($newItemBtn)){
+                if($stmt->rowCount() > 0){
+                    $_SESSION['sessMSG'] = "<div class='alert alert-success'>Item with name {$itemName} added.</div>"; 
+                    header("location: index.php");
+                    exit();
+                } else {
+                    $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Error. Item name must be unique and the name {$itemName} is already taken.</div>"; 
+                    header("location: index.php");
+                    exit();
+                }
             }
         }
     }
+    
 
     protected function setDeleteItem(){
-        $deleteItemBtn = filter_input(INPUT_POST, 'deleteItemBtn');
-        if(isset($deleteItemBtn)){
+        
         try{
+            $deleteItemBtn = filter_input(INPUT_POST, 'deleteItemBtn');
+        if(isset($deleteItemBtn)){
+
             $pdo = $this->connect();
 
             //begin transaction
@@ -141,6 +167,7 @@ class ItemsModel extends DBconn{
             unlink($imageNameDelete);
 
         }
+    }
         catch(Exception $e){
             $pdo->rollBack();
             echo $e->getMessage();
@@ -150,22 +177,24 @@ class ItemsModel extends DBconn{
                 if($stmt->rowCount() > 0){
                     $_SESSION['sessMSG'] = "<div class='alert alert-success'>Item with ID {$itemID} deleted.</div>"; 
                     header("location: index.php");
+                    exit();
                 } else {
                     $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Error. Item with ID {$itemID} not deleted.</div>"; 
                     header("location: index.php");
+                    exit();
                 }
             }
         }
-        
-    }
     }
 
     //update - also updates the wishlist
     protected function setUpdateItem(){
+        try{
+
         $updateItemBtn = filter_input(INPUT_POST, 'updateItemBtn');
 
         if(isset($updateItemBtn)){
-        try{
+        
         $maxFileSize = 80000000;
         $unixTimeStamp = new DateTime();
         $imageName = $unixTimeStamp->getTimestamp() . '-' .  $_FILES["updateItemImage"]["name"];
@@ -182,22 +211,23 @@ class ItemsModel extends DBconn{
                 if(($_FILES["updateItemImage"]["size"] >= $maxFileSize) || ($_FILES["updateItemImage"]["size"] == 0)) {
                     $_SESSION["sessMSG"] = "<div class='alert alert-danger'>File too large. {$maxFileSize}KB is the max file size.</div>";
                     header('location: index.php');
+                    exit();
                 } else {
-                    //upload the file
-                    if(move_uploaded_file($_FILES["updateItemImage"]["tmp_name"],$target_file)){
-                        $imageUpload = $target_file;
-                    } else {
-                        $_SESSION["sessMSG"] = "<div class='alert alert-danger'>Error. Image '{$imageName}' not uploaded.</div>";
-                        header('location: index.php');
-                    }
+                    $imageUpload = $target_file;
                 }
             } else {
-                $_SESSION["sessMSG"] = "<div class='alert alert-danger'>File extension must be jpg, png or jpeg. '{$imageFileType}' is not a valid extension.</div>";
-                header('location: index.php');
+                //must check if its set or else it stops here
+                if(isset($imageUpload)){
+                    $_SESSION["sessMSG"] = "<div class='alert alert-danger'>File extension must be jpg, png or jpeg. '{$imageFileType}' is not a valid extension.</div>";
+                    header('location: index.php');
+                    exit();
+                }
+                
             }
         } else {
             $_SESSION["sessMSG"] = "<div class='alert alert-danger'>A file with the name '{$imageName}' already exists. Please choose another name.</div>";
             header('location: index.php');
+            exit();
         }
     
 
@@ -226,6 +256,8 @@ class ItemsModel extends DBconn{
                 $stmt->bindParam(5, $imageUpload, PDO::PARAM_STR);
                 $stmt->bindParam(6, $itemID, PDO::PARAM_INT);
                 $stmt->execute();
+
+                move_uploaded_file($_FILES["updateItemImage"]["tmp_name"], $target_file);
             } else {
                 $sql = "UPDATE oopphp_items SET itemName = ?, itemDescription = ?, itemPrice = ?, itemStock = ? WHERE itemID = ?";
                 $stmt = $pdo->prepare($sql);
@@ -254,6 +286,8 @@ class ItemsModel extends DBconn{
                 $stmt2->bindParam(5, $imageUpload, PDO::PARAM_STR);
                 $stmt2->bindParam(6, $itemID_fk, PDO::PARAM_INT);
                 $stmt2->execute();
+
+                move_uploaded_file($_FILES["updateItemImage"]["tmp_name"],$target_file);
             } else {
                 $sql = "UPDATE oopphp_wishlist SET itemName_fk = ?, itemDescription_fk = ?, itemPrice_fk = ?, itemStock_fk = ? WHERE itemID_fk = ?";
                 $stmt2 = $pdo->prepare($sql);
@@ -275,6 +309,7 @@ class ItemsModel extends DBconn{
             }
             
         }
+    }
         catch(Exception $e){
             $pdo->rollBack();
             echo $e->getMessage();
@@ -285,13 +320,15 @@ class ItemsModel extends DBconn{
                 if($stmt->rowCount() > 0){
                     $_SESSION['sessMSG'] = "<div class='alert alert-success'>Item with ID {$itemID} updated.</div>"; 
                     header("location: " . $_SERVER['PHP_SELF']);
+                    exit();
                 } else {
                     $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Error. Item with ID {$itemID} not updated.</div>"; 
                     header("location: " . $_SERVER['PHP_SELF']);
+                    exit();
                 }
             }
         }
-    }
+    
     }
 
     /*

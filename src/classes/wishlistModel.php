@@ -98,9 +98,11 @@ class WishlistModel extends DBconn{
             if($stmt->rowCount() > 0){
                 $_SESSION['sessMSG'] = "<div class='alert alert-success'>Item with name {$itemName_fk} added to wishlist.</div>"; 
                 header("location: index.php");
+                exit();
             } else {
                 $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Error. Item with name {$itemName_fk} not added to wishlist.</div>"; 
                 header("location: index.php");
+                exit();
             }
         }
     }
@@ -122,9 +124,11 @@ class WishlistModel extends DBconn{
             if($stmt->rowCount() > 0){
                 $_SESSION['sessMSG'] = "<div class='alert alert-success'>Item with ID {$itemID} removed from wishlist.</div>"; 
                 header("location: my-account.php");
+                exit();
             } else {
                 $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Error. Item with ID {$itemID} not removed from wishlist.</div>"; 
                 header("location: my-account.php");
+                exit();
             }
         }
     }
@@ -145,9 +149,11 @@ class WishlistModel extends DBconn{
             if($stmt->rowCount() > 0){
                 $_SESSION['sessMSG'] = "<div class='alert alert-success'>User with ID {$userID} wishlist is now public.</div>"; 
                 header("location: my-account.php");
+                exit();
             } else {
                 $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Error. User with ID {$userID} not public.</div>"; 
                 header("location: my-account.php");
+                exit();
             }
         }
     }
@@ -168,9 +174,11 @@ class WishlistModel extends DBconn{
             if($stmt->rowCount() > 0){
                 $_SESSION['sessMSG'] = "<div class='alert alert-success'>User with ID {$userID} wishlist is now private.</div>"; 
                 header("location: my-account.php");
+                exit();
             } else {
                 $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Error. User with ID {$userID} not private.</div>"; 
                 header("location: my-account.php");
+                exit();
             }
         }
     }

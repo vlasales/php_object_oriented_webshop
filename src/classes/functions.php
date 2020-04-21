@@ -1,7 +1,6 @@
 <?php
-
 class Functions{
-    //general crud msg
+    //general crud and utility msg to display
     public function session_message(){
         if(isset($_SESSION['sessMSG'])){
             echo $_SESSION['sessMSG'];
@@ -14,6 +13,7 @@ class Functions{
         if(!isset($_SESSION['uid'])){
             $_SESSION['sessMSG'] = "<div class='alert alert-danger'>You must have an account and be logged in to see your account.</div>"; 
             header("location: signup.php");
+            exit();
         }
     }
 }

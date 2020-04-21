@@ -1,6 +1,7 @@
 <?php
 class LogoutModel extends DBconn{
 		protected function setLogout(){
+            try{
             if(isset($_POST['logoutBtn'])){
                 if(isset($_SESSION['uid'])){
                     session_unset();
@@ -10,13 +11,20 @@ class LogoutModel extends DBconn{
                     session_start();
                     $_SESSION['sessMSG'] = "<div class='alert alert-success'>You are now logged out.</div>";
                     header('location: index.php');
+                    exit();
             } else {
                 $_SESSION['sessMSG'] = "<div class='alert alert-danger'>No userlogin set.</div>";
                 header('location: index.php');
+                exit();
             }
         } else {
             $_SESSION['sessMSG'] = "<div class='alert alert-danger'>No logout set.</div>";
             header('location: index.php');
+            exit();
         }
+    }
+    catch(Exception $e){
+        echo $e->getMessage();
+    }
     }
 }
