@@ -49,24 +49,24 @@ class SearchView extends SearchModel{
                     <input name="updateItemID" type="hidden" value="<?php echo $result['itemID']; ?>" class="form-control">
                     <div class="form-group">
                         <label for="updateItemName">Update name</label>
-                        <input name="updateItemName" type="text" value="<?php echo $result['itemName']; ?>" class="form-control">
+                        <input name="updateItemName" id="updateItemName" type="text" value="<?php echo $result['itemName']; ?>" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="updateItemDescription">Update description</label>
-                        <input name="updateItemDescription" type="text" value="<?php echo $result['itemDescription']; ?>" class="form-control">
+                        <input name="updateItemDescription" id="updateItemDescription" type="text" value="<?php echo $result['itemDescription']; ?>" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="updateItemPrice">Update price</label>
-                        <input name="updateItemPrice" type="number" value="<?php echo $result['itemPrice']; ?>" class="form-control">
+                        <input name="updateItemPrice" id="updateItemPrice" type="number" value="<?php echo $result['itemPrice']; ?>" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="updateItemStock">Update stock</label>
-                        <input name="updateItemStock" type="number" value="<?php echo $result['itemStock']; ?>" class="form-control">
+                        <input name="updateItemStock" id="updateItemStock" type="number" value="<?php echo $result['itemStock']; ?>" class="form-control">
                     </div>
                     <div class="form-group">
                         <input type="hidden" name="updateImageRemove" value="<?php echo $result['itemImagePath'] ?>">
                         <label for="updateItemImage" class="w-100">Update image</label>
-                        <input type="file" name="updateItemImage" value="<?php echo $result['itemImagePath'] ?>" accept="image/png, image/jpeg, image/jpg">
+                        <input type="file" name="updateItemImage" id="updateItemImage" value="<?php echo $result['itemImagePath'] ?>" accept="image/png, image/jpeg, image/jpg">
                     </div>
                     <button type="submit" name="updateItemBtn" class="btn btn-warning">Update</button>
                    </form>

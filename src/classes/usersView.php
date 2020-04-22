@@ -194,12 +194,12 @@ class UsersView extends UsersModel{
                     <input name="updateUserID" type="hidden" value="<?php echo $result['userID'] ?>">
                     <div class="form-group">
                         <label for="updateUserName">New name</label>
-                        <input name="updateUserName" type="text" value="<?php echo $result['userName']; ?>" class="form-control">
+                        <input name="updateUserName" id="updateUserName" type="text" value="<?php echo $result['userName']; ?>" class="form-control">
                     </div>
                     <div class="form-group">
                         <input type="hidden" name="updateUserRemove" value="<?php echo $result['userImagePath']; ?>">
-                        <label for="userImageUpdate" class="w-100">Image - Must be png, jpeg or jpg.</label>
-                        <input type="file" name="updateUserImage" accept="image/png, image/jpeg, image/jpg">
+                        <label for="updateUserImage" class="w-100">Image - Must be png, jpeg or jpg.</label>
+                        <input type="file" name="updateUserImage" id="updateUserImage" accept="image/png, image/jpeg, image/jpg">
                     </div>
                     <button name="updateUserBtn" type="submit" class="btn btn-warning">Update</button>
                 </form>

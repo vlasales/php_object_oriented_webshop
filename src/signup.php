@@ -25,8 +25,8 @@
                 <h1>Sign up</h1>
                 <form method="POST" action="users.php" enctype="multipart/form-data" class="needs-validation" novalidate>
                     <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" name="newUsername" class="form-control" required>
+                    <label for="newUsername">Name</label>
+                    <input type="text" name="newUsername" id="newUsername" class="form-control" required>
                     <div class="valid-feedback">
                         <?php echo $valid_feedback ?>
                     </div>
@@ -35,8 +35,8 @@
                     </div>
                     </div>
             <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" name="newUserpassword" class="form-control" required>
+                    <label for="newUserpassword">Password</label>
+                    <input type="password" name="newUserpassword" id="newUserpassword" class="form-control" required>
                     <div class="valid-feedback">
                         <?php echo $valid_feedback ?>
                     </div>
@@ -45,8 +45,8 @@
                     </div>
             </div>
             <div class="form-group">
-                <label for="userImage" class="w-100">Image - Must be png, jpeg or jpg.</label>
-                <input type="file" name="newUserImage" accept="image/png, image/jpeg, image/jpg">
+                <label for="newUserImage" class="w-100">Image - Must be png, jpeg or jpg.</label>
+                <input type="file" name="newUserImage" id="newUserImage" accept="image/png, image/jpeg, image/jpg">
             </div>
                     <button type="submit" name="newUserBtn" class="btn btn-success">Create user</button>
                 </form>

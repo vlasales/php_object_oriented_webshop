@@ -37,13 +37,15 @@
             ?>Not logged in<?php
         }
         ?>
+        <hr class="border-light">
         <form id="login-form" method="POST" action="login.php" class="form-inline my-2 my-lg-0">
             <label for="loginName" class="mr-lg-2 text-light">Name</label>
-            <input type="text" name="loginName" class="form-control mr-sm-2 mb-3 mb-lg-0" required>
+            <input type="text" name="loginName" id="loginName" class="form-control mr-sm-2 mb-3 mb-lg-0" required>
             <label for="loginPassword" class="mr-lg-2 text-light">Password</label>
-            <input type="password" name="loginPassword" class="form-control mr-sm-2" required>
+            <input type="password" name="loginPassword" id="loginPassword" class="form-control mr-sm-2" required>
             <button type="submit" name="loginBtn" class="mt-2 mt-lg-0 btn btn-primary">Login</button>
         </form>
+        <hr class="border-light">
         <form id="logout-form" method="POST" action="logout.php" class="form-inline my-2 my-lg-0">
             <button class="btn btn-danger" name="logoutBtn" type="submit">Log out</button>
         </form>        

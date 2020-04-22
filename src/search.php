@@ -23,8 +23,8 @@
             <div class="col-lg-6">
                 <form method="GET" action="search.php" class="needs-validation" novalidate>
                     <div class="form-group">
-                        <label for="query">Search items by name</label>
-                        <input type="text" name="itemName" class="form-control" required>
+                        <label for="itemName">Search items by name</label>
+                        <input type="text" name="itemName" id="itemName" class="form-control" required>
                         <div class="valid-feedback">
                             <?php echo $valid_feedback ?>
                         </div>
@@ -39,8 +39,8 @@
             <div class="col-lg-6">
                 <form method="GET" action="search.php" class="needs-validation" novalidate>
                     <div class="form-group">
-                        <label for="query">Search user by name</label>
-                        <input type="text" name="userName" class="form-control" required>
+                        <label for="userName">Search user by name</label>
+                        <input type="text" name="userName" id="userName" class="form-control" required>
                         <div class="valid-feedback">
                             <?php echo $valid_feedback ?>
                         </div>

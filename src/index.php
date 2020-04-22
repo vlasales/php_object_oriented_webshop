@@ -22,7 +22,7 @@
     <form method="POST" action="<?php echo htmlentities($_SERVER['PHP_SELF']) ?>" class="needs-validation" enctype="multipart/form-data" novalidate>
         <div class="form-group">
             <label for="newItemName">Name</label>
-            <input type="text" name="newItemName" class="form-control" required>
+            <input type="text" name="newItemName" id="newItemName" class="form-control" required>
             <div class="valid-feedback">
                 <?php echo $valid_feedback ?>
             </div>
@@ -32,7 +32,7 @@
         </div>
         <div class="form-group">
             <label for="newItemDescription">Description</label>
-            <input type="text" name="newItemDescription" class="form-control" required>
+            <input type="text" name="newItemDescription" id="newItemDescription" class="form-control" required>
             <div class="valid-feedback">
                 <?php echo $valid_feedback ?>
             </div>
@@ -42,7 +42,7 @@
         </div>
         <div class="form-group">
             <label for="newItemPrice">Price</label>
-            <input type="number" name="newItemPrice" class="form-control" required>
+            <input type="number" name="newItemPrice" id="newItemPrice" class="form-control" required>
             <div class="valid-feedback">
                 <?php echo $valid_feedback ?>
             </div>
@@ -52,7 +52,7 @@
         </div>
         <div class="form-group">
             <label for="newItemStock">Stock</label>
-            <input type="number" name="newItemStock" class="form-control" required>
+            <input type="number" name="newItemStock" id="newItemStock" class="form-control" required>
             <div class="valid-feedback">
                 <?php echo $valid_feedback ?>
             </div>
@@ -61,8 +61,8 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="itemImage" class="w-100">Image - Must be png, jpeg or jpg.</label>
-            <input type="file" name="newItemImage" accept="image/png, image/jpeg, image/jpg" required>
+            <label for="newItemImage" class="w-100">Image - Must be png, jpeg or jpg.</label>
+            <input type="file" name="newItemImage" id="newItemImage" accept="image/png, image/jpeg, image/jpg" required>
             <div class="valid-feedback">
                 <?php echo $valid_feedback ?>
             </div>
@@ -84,8 +84,8 @@
             <div class="col-lg-12">
                 <form method="GET" action="search.php" class="needs-validation" novalidate>
                     <div class="form-group">
-                        <label for="query">Search items by name</label>
-                        <input type="text" name="itemName" class="form-control" required>
+                        <label for="itemName">Search items by name</label>
+                        <input type="text" name="itemName" id="itemName" class="form-control" required>
                         <div class="valid-feedback">
                             <?php echo $valid_feedback ?>
                         </div>

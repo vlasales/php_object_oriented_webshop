@@ -29,23 +29,7 @@
     <hr>
     -->
     
-    <?php
     
-        $sessMSG = new Functions();
-        $sessMSG->session_message();
-        /*
-        if(isset($_SESSION['userMSGNoAdmins'])){
-            echo $_SESSION['userMSGNoAdmins'];
-            unset($_SESSION["userMSGNoAdmins"]);
-        }
-
-        if(isset($_SESSION['userMSGNoNormalUsers'])){
-            echo $_SESSION['userMSGNoNormalUsers'];
-            unset($_SESSION["userMSGNoNormalUsers"]);
-        }
-    }
-    */
-    ?>
     <!--
     <div class="container-fluid">
         <div class="row">
@@ -57,10 +41,14 @@
 -->
 <div class="row">
     <div class="col-lg-12">
+    <?php
+        $sessMSG = new Functions();
+        $sessMSG->session_message();
+    ?>
                 <form method="GET" action="search.php" class="needs-validation" novalidate>
                     <div class="form-group">
-                        <label for="query">Search user by name</label>
-                        <input type="text" name="userName" class="form-control" required>
+                        <label for="userName">Search user by name</label>
+                        <input type="text" name="userName" id="userName" class="form-control" required>
                         <div class="valid-feedback">
                             <?php echo $valid_feedback ?>
                         </div>

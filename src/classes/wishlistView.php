@@ -2,7 +2,7 @@
 class WishlistView extends WishlistModel{
     public function showWishlistAccount(){
         $results = $this->getWishListAccount();
-        $wishlist_total = 0; 
+        $wishlist_total = 0;
         if(isset($results)){
             foreach($results as $result){
                 ?>
@@ -66,7 +66,7 @@ class WishlistView extends WishlistModel{
                 <?php
                 $wishlist_total = $wishlist_total + $result['itemPrice_fk'];
             }
-        echo "<h2 class='text-primary'>This users total wishlist price: {$wishlist_total} DKK</h2>";
+            echo "<h2 class='text-primary'>This users total wishlist price: {$wishlist_total} DKK</h2>";
         }
     }
 }

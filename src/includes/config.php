@@ -27,13 +27,13 @@
 				
 				echo '<br>';
 	
-				print_r('SESSION: ');
+				echo 'SESSION: ';
 				print_r($_SESSION); echo '<br>';
-				print_r('GET: ');
+				echo 'GET: ';
 				print_r($_GET); echo '<br>';
-				print_r('POST: ');
+				echo 'POST: ';
 				print_r($_POST); echo '<br>';
-				print_r('FILES: ');
+				echo 'FILES: ';
 				print_r($_FILES); echo '<br>';
 	
 				echo 'login status: ';
