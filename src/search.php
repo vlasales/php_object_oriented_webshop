@@ -19,7 +19,7 @@
             $sessMSG2 = new Functions();
             $sessMSG2->session_message();
         ?>
-    <div class="row">
+    <main role="main" class="row">
             <div class="col-lg-6">
                 <form method="GET" action="search.php" class="needs-validation" novalidate>
                     <div class="form-group">
@@ -53,19 +53,19 @@
                 <hr>
             </div>
             <hr>
-        </div>
+        </main>
 		<div class="row">
-            <div class="col-lg-6">
+            <section class="col-lg-6">
                 <?php
                     $seach_results = new SearchView();
                     $seach_results->showSearchItems();
                 ?>
-            </div>
-            <div class="col-lg-6">
+            </section>
+            <section class="col-lg-6">
                 <?php
                     $seach_results->showSearchUsers();
                 ?>
-            </div>
+            </section>
 		</div>
     </div>
     <?php   

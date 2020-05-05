@@ -33,7 +33,7 @@ class UsersModel extends DBconn{
     //specific user
     protected function getUserWhere(){
         try{
-        $userID = filter_input(INPUT_GET, 'id');
+        $userID = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
         if(isset($userID)){
             $sql = "SELECT * FROM oopphp_users WHERE userID = ?";
@@ -60,7 +60,7 @@ class UsersModel extends DBconn{
     }
     }
 
-    //specific user for my-account.php
+    //specific user for account.php
     protected function getMyUser(){
         try{
         if(isset($_SESSION['uid'])){
@@ -155,8 +155,8 @@ class UsersModel extends DBconn{
         $newUserBtn = filter_input(INPUT_POST, 'newUserBtn');
 
         if(isset($newUserBtn)){
-        $userName = htmlentities(filter_input(INPUT_POST, 'newUsername'));
-        $userPassword = htmlentities(filter_input(INPUT_POST, 'newUserpassword'));
+        $userName = filter_input(INPUT_POST, 'newUsername', FILTER_SANITIZE_STRING);
+        $userPassword = filter_input(INPUT_POST, 'newUserpassword', FILTER_SANITIZE_STRING);
         $userPasswordHash = password_hash($userPassword, PASSWORD_DEFAULT);
 
         //file
@@ -240,22 +240,17 @@ class UsersModel extends DBconn{
             //begin transaction
             $pdo->beginTransaction();
 
-            $userID = filter_input(INPUT_POST, 'deleteUserID');
+            $userID = filter_input(INPUT_POST, 'deleteUserID', FILTER_VALIDATE_INT);
             
 
-            if($userID == 1){
-                $_SESSION['sessMSG'] = "<div class='alert alert-danger'>This user is the root admin and cannot be deleted</div>"; 
-                header("location: users.php");
-                exit();
-            } else {
                 $sql = "DELETE FROM oopphp_users WHERE userID = ?";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindParam(1, $userID, PDO::PARAM_INT);
                 $stmt->execute();
-            }
+            
 
             //delete wishlist if user deletes account
-            $userID_fk = filter_input(INPUT_POST, 'deleteUserID');
+            $userID_fk = filter_input(INPUT_POST, 'deleteUserID', FILTER_VALIDATE_INT);
 
             $sql = "DELETE FROM oopphp_wishlist WHERE userID_fk = ?";
             $stmt2 = $pdo->prepare($sql);
@@ -265,8 +260,9 @@ class UsersModel extends DBconn{
             $pdo->commit();
 
             //delete image
-            $deleteUserImage = htmlentities(filter_input(INPUT_POST, 'deleteUserImage'));
+            $deleteUserImage = filter_input(INPUT_POST, 'deleteUserImage', FILTER_SANITIZE_STRING);
             unlink($deleteUserImage);
+
 
         }
     }
@@ -301,12 +297,12 @@ class UsersModel extends DBconn{
     }
 
     //delete image
-    protected function setDeleteImage(){
+    protected function setDeleteUserImage(){
         try{
-        $deleteImageBtn = filter_input(INPUT_POST, 'deleteImageBtn');
+        $deleteImageBtn = filter_input(INPUT_POST, 'deleteImageUserBtn');
         
         if(isset($deleteImageBtn)){
-            $userID = htmlentities(filter_input(INPUT_POST, 'deleteUserImageID'));
+            $userID = filter_input(INPUT_POST, 'deleteUserImageID', FILTER_VALIDATE_INT);
 
             //deleting image is actually an update. or else you delete the whole user
             $sql = "UPDATE oopphp_users SET userImagePath = null WHERE userID = ?";
@@ -314,7 +310,7 @@ class UsersModel extends DBconn{
             $stmt->bindParam(1, $userID, PDO::PARAM_INT);
             $stmt->execute();
 
-            $deleteImageUser = htmlentities(filter_input(INPUT_POST, 'deleteImageUser'));
+            $deleteImageUser = filter_input(INPUT_POST, 'deleteImageUser', FILTER_SANITIZE_STRING);
             unlink($deleteImageUser);
         }
     }
@@ -325,11 +321,11 @@ class UsersModel extends DBconn{
         if(isset($deleteImageBtn)){
             if($stmt->rowCount() > 0){
                 $_SESSION['sessMSG'] = "<div class='alert alert-success'>User with ID {$userID} image deleted.</div>"; 
-                header("location: my-account.php");
+                header("location: account.php");
                 exit();
             } else {
                 $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Error. User with ID {$userID} image not deleted.</div>"; 
-                header("location: my-account.php");
+                header("location: account.php");
                 exit();
             }
         }
@@ -354,25 +350,25 @@ class UsersModel extends DBconn{
                 if(in_array($imageFileType, $extensions_arr)){
                     if(($_FILES["updateUserImage"]["size"] >= $maxFileSize) || ($_FILES["updateUserImage"]["size"] == 0)) {
                         $_SESSION["sessMSG"] = "<div class='alert alert-danger'>File too large. {$maxFileSize}KB is the max file size.</div>";
-                        header('location: my-account.php');
+                        header('location: account.php');
                     } else {
                             $imageUpload = $target_file;
                     }
                 } else {
                     if(isset($imageUpload)){
                         $_SESSION["sessMSG"] = "<div class='alert alert-danger'>File extension must be jpg, png or jpeg. '{$imageFileType}' is not a valid extension.</div>";
-                        header('location: my-account.php');
+                        header('location: account.php');
                         exit();
                     }
                 }
             } else {
                 $_SESSION["sessMSG"] = "<div class='alert alert-danger'>A file with the name '{$imageName}' already exists. Please choose another name.</div>";
-                header('location: my-account.php');
+                header('location: account.php');
                 exit();
             }
 
-        $userID = htmlentities(filter_input(INPUT_POST, 'updateUserID'));
-        $userName = htmlentities(filter_input(INPUT_POST, 'updateUserName'));
+        $userID = filter_input(INPUT_POST, 'updateUserID', FILTER_VALIDATE_INT);
+        $userName = filter_input(INPUT_POST, 'updateUserName', FILTER_SANITIZE_STRING);
         
         if(isset($imageUpload)){
             $sql = "UPDATE oopphp_users SET userName = ?, userImagePath = ? WHERE userID = ?";
@@ -390,9 +386,10 @@ class UsersModel extends DBconn{
             $stmt->bindParam(2, $userID, PDO::PARAM_INT);
             $stmt->execute();
         }
+
         
         //only delete image if there is an upload file
-        $updateUserRemove = htmlentities(filter_input(INPUT_POST, 'updateUserRemove'));
+        $updateUserRemove = filter_input(INPUT_POST, 'updateUserRemove', FILTER_SANITIZE_STRING);
         if(isset($imageUpload)){
             unlink($updateUserRemove);
         }
@@ -407,11 +404,11 @@ class UsersModel extends DBconn{
         if(isset($updateUserBtn)){
             if($stmt->rowCount() > 0){
                 $_SESSION['sessMSG'] = "<div class='alert alert-success'>User with ID {$userID} updated.</div>"; 
-                header("location: my-account.php");
+                header("location: account.php");
                 exit();
             } else {
                 $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Error. User with ID {$userID} not updated.</div>"; 
-                header("location: my-account.php");
+                header("location: account.php");
                 exit();
             }
         }
@@ -424,7 +421,7 @@ class UsersModel extends DBconn{
         $makeAdminBtn = filter_input(INPUT_POST, 'userMakeAdmin');
 
         if(isset($makeAdminBtn)){
-        $userID = filter_input(INPUT_POST, 'userIDMakeAdmin');
+        $userID = filter_input(INPUT_POST, 'userIDMakeAdmin', FILTER_VALIDATE_INT);
 
         $sql = "UPDATE oopphp_users SET isAdmin = 1 WHERE userID = ?";
         $stmt = $this->connect()->prepare($sql);
@@ -460,7 +457,7 @@ class UsersModel extends DBconn{
         $removeAdminBtn = filter_input(INPUT_POST, 'userRemoveAdmin');
 
         if(isset($removeAdminBtn)){
-        $userID = filter_input(INPUT_POST, 'userIDRemoveAdmin');
+        $userID = filter_input(INPUT_POST, 'userIDRemoveAdmin', FILTER_VALIDATE_INT);
     
         if($userID == 1){
             $_SESSION['sessMSG'] = "<div class='alert alert-danger'>This user is the root admin and cannot be removed as admin.</div>"; 

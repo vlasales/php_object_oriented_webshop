@@ -6,9 +6,18 @@ class ItemsView extends ItemsModel{
             foreach($results as $result){
                 ?>
                 <div class="col-lg-4">
-                   <p><?php echo $result['itemID']; ?></p>
                    <p><?php echo $result['itemName']; ?></p>
-                   <img src="<?php echo $result['itemImagePath']; ?>">
+                   <?php
+                    if($result['itemImagePath'] == null){
+                        ?>
+                        <img src="https://via.placeholder.com/300/f2f2f2/000000/?text=No image for item" class="border">
+                        <?php
+                    } else {
+                        ?>
+                        <img src="<?php echo $result['itemImagePath']; ?>" class="border">
+                        <?php
+                    }
+                    ?>
                    <p><?php echo $result['itemDescription']; ?></p>
                    <p><?php echo $result['itemPrice'] . 'DKK'; ?></p>
                    <?php
@@ -49,27 +58,32 @@ class ItemsView extends ItemsModel{
                     <input name="updateItemID" type="hidden" value="<?php echo $result['itemID']; ?>" class="form-control">
                     <div class="form-group">
                         <label for="updateItemName">Update name</label>
-                        <input name="updateItemName" id="updateItemName" type="text" value="<?php echo $result['itemName']; ?>" class="form-control">
+                        <input name="updateItemName" type="text" value="<?php echo $result['itemName']; ?>" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="updateItemDescription">Update description</label>
-                        <input name="updateItemDescription" id="updateItemDescription" type="text" value="<?php echo $result['itemDescription']; ?>" class="form-control">
+                        <input name="updateItemDescription" type="text" value="<?php echo $result['itemDescription']; ?>" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="updateItemPrice">Update price</label>
-                        <input name="updateItemPrice" id="updateItemPrice" type="number" value="<?php echo $result['itemPrice']; ?>" class="form-control">
+                        <input name="updateItemPrice" type="number" value="<?php echo $result['itemPrice']; ?>" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="updateItemStock">Update stock</label>
-                        <input name="updateItemStock" id="updateItemStock" type="number" value="<?php echo $result['itemStock']; ?>" class="form-control">
+                        <input name="updateItemStock" type="number" value="<?php echo $result['itemStock']; ?>" class="form-control">
                     </div>
                     <div class="form-group">
                         <input type="hidden" name="updateImageRemove" value="<?php echo $result['itemImagePath'] ?>">
                         <label for="updateItemImage" class="w-100">Update image</label>
-                        <input type="file" name="updateItemImage" id="updateItemImage" value="<?php echo $result['itemImagePath'] ?>" accept="image/png, image/jpeg, image/jpg">
+                        <input type="file" name="updateItemImage" value="<?php echo $result['itemImagePath'] ?>" accept="image/png, image/jpeg, image/jpg">
                     </div>
                     <button type="submit" name="updateItemBtn" class="btn btn-warning">Update</button>
                    </form>
+                    <form method="POST" action="index.php" class="mb-2">
+                        <input name="deleteItemImageID" type="hidden" value="<?php echo $result['itemID'] ?>">
+                        <input type="hidden" name="deleteImageItem" value="<?php echo $result['itemImagePath']; ?>">
+                        <button type="submit" name="deleteImageItemBtn" class="btn btn-danger">Delete image</button>
+                    </form>
                    <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                         <input type="hidden" name="deleteItemID" value="<?php echo $result['itemID'] ?>">
                         <input type="hidden" name="deleteImageName" value="<?php echo $result['itemImagePath'] ?>">
@@ -90,9 +104,18 @@ class ItemsView extends ItemsModel{
         if(isset($results)){
             foreach($results as $result){
                 ?> 
-                   <p><?php echo $result['itemID']; ?></p>
                    <p><?php echo $result['itemName']; ?></p>
-                   <img src="<?php echo $result['itemImagePath']; ?>">
+                   <?php
+                    if($result['itemImagePath'] == null){
+                        ?>
+                        <img src="https://via.placeholder.com/300/f2f2f2/000000/?text=No image for item" class="border">
+                        <?php
+                    } else {
+                        ?>
+                        <img src="<?php echo $result['itemImagePath']; ?>" class="border">
+                        <?php
+                    }
+                    ?>
                    <p><?php echo $result['itemDescription']; ?></p>
                    <p><?php echo $result['itemPrice'] . 'DKK'; ?></p>
                    <?php
@@ -135,27 +158,32 @@ class ItemsView extends ItemsModel{
                     <input name="updateItemID" type="hidden" value="<?php echo $result['itemID']; ?>" class="form-control">
                     <div class="form-group">
                         <label for="updateItemName">Update name</label>
-                        <input name="updateItemName" id="updateItemName" type="text" value="<?php echo $result['itemName']; ?>" class="form-control">
+                        <input name="updateItemName" type="text" value="<?php echo $result['itemName']; ?>" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="updateItemDescription">Update description</label>
-                        <input name="updateItemDescription" id="updateItemDescription" type="text" value="<?php echo $result['itemDescription']; ?>" class="form-control">
+                        <input name="updateItemDescription" type="text" value="<?php echo $result['itemDescription']; ?>" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="updateItemPrice">Update price</label>
-                        <input name="updateItemPrice" id="updateItemPrice" type="number" value="<?php echo $result['itemPrice']; ?>" class="form-control">
+                        <input name="updateItemPrice" type="number" value="<?php echo $result['itemPrice']; ?>" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="updateItemStock">Update stock</label>
-                        <input name="updateItemStock" id="updateItemStock" type="number" value="<?php echo $result['itemStock']; ?>" class="form-control">
+                        <input name="updateItemStock" type="number" value="<?php echo $result['itemStock']; ?>" class="form-control">
                     </div>
                     <div class="form-group">
                         <input type="hidden" name="updateImageRemove" value="<?php echo $result['itemImagePath'] ?>">
                         <label for="updateItemImage" class="w-100">Update image</label>
-                        <input type="file" name="updateItemImage" id="updateItemImage" value="<?php echo $result['itemImagePath'] ?>" accept="image/png, image/jpeg, image/jpg">
+                        <input type="file" name="updateItemImage" value="<?php echo $result['itemImagePath'] ?>" accept="image/png, image/jpeg, image/jpg">
                     </div>
                     <button type="submit" name="updateItemBtn" class="btn btn-warning">Update</button>
                    </form>
+                   <form method="POST" action="index.php" class="mb-2">
+                        <input name="deleteItemImageID" type="hidden" value="<?php echo $result['itemID'] ?>">
+                        <input type="hidden" name="deleteImageItem" value="<?php echo $result['itemImagePath']; ?>">
+                        <button type="submit" name="deleteImageItemBtn" class="btn btn-danger">Delete image</button>
+                    </form>
                    <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                         <input type="hidden" name="deleteItemID" value="<?php echo $result['itemID'] ?>">
                         <button type="submit" name="deleteItemBtn" class="btn btn-danger">Delete this item</button>

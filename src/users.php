@@ -14,37 +14,12 @@
 <body>
     <?php include 'includes/content/navbar.php' ?>
     <div class="container-fluid">
-    
-    <!--
-    Probably not needed
-    <form action="users.php" method="POST">
-        <select name="usersSelect">
-            <option value="none">None</option>
-            <option value="all">All</option>
-            <option value="admin">Admins</option>
-            <option value="user">Users</option>
-        </select>
-        <button type="submit">Filter</button>
-    </form>
-    <hr>
-    -->
-    
-    
-    <!--
-    <div class="container-fluid">
-        <div class="row">
+        <section class="row">
+            <div class="col-lg-12">
             <?php
-                //$usersObjectShow->filterUsers();
+                $sessMSG = new Functions();
+                $sessMSG->session_message();
             ?>
-        </div>
-    </div>
--->
-<div class="row">
-    <div class="col-lg-12">
-    <?php
-        $sessMSG = new Functions();
-        $sessMSG->session_message();
-    ?>
                 <form method="GET" action="search.php" class="needs-validation" novalidate>
                     <div class="form-group">
                         <label for="userName">Search user by name</label>
@@ -59,45 +34,42 @@
                     <button type="submit" class="btn btn-primary">Search</button>
                 </form>
             </div>
-</div>
-<hr>
-<div class="row">
-    <div class="col-lg-12">
-        <h1>List of users</h1>
-    </div>
-</div>
-            <div class="row">
-        <div class="col-lg-4">
-        <?php
-        //see users
-        $usersObjectShow = new UsersView();
-        $usersObjectShow->showUsers();
-        ?>
+        </section>
+    <hr>
+    <section class="row">
+        <div class="col-lg-12">
+            <h1>List of users</h1>
         </div>
-        <div class="col-lg-4">
-        <?php
-        //admin
-        $usersObjectShow->showUsersAdmin();
-        ?>
-        </div>
-        <div class="col-lg-4">
-        <?php
-        //non-admin
-        
-        $usersObjectShow->showUsersNotAdmin();
-    ?>
-        </div>
-    </div>
+    </section>
+    <main role="main" class="row">
+        <section class="col-lg-4">
+            <?php
+                //see users
+                $usersObjectShow = new UsersView();
+                $usersObjectShow->showUsers();
+            ?>
+        </section>
+        <section class="col-lg-4">
+            <?php
+                //admin
+                $usersObjectShow->showUsersAdmin();
+            ?>
+        </section>
+        <section class="col-lg-4">
+            <?php
+                //non-admin
+                $usersObjectShow->showUsersNotAdmin();
+            ?>
+        </section>
+    </main>
     </div>
 
     <?php   
         $usersObject = new UsersController();
         $usersObject->createUser();
-        $usersObject->updateUser();
-            $usersObject->makeUserAdmin();
-            $usersObject->removeUserAdmin();
         $usersObject->deleteUser();
-            $usersObject->deleteImage();
+        $usersObject->makeUserAdmin();
+        $usersObject->removeUserAdmin();
     ?>
     <?php include 'includes/content/footer.php' ?>
     <?php include 'includes/content/scripts.php' ?>

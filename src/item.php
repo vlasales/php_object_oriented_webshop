@@ -10,13 +10,12 @@
 <html lang="en">
 <head>
     <?php include 'includes/content/head.php' ?>
-    <title><?php echo $itemName ?></title>
 </head>
 <body>
     <?php include 'includes/content/navbar.php' ?>
     
     <div class="container-fluid">
-        <div class="row">
+        <main role="main" class="row">
             <div class="col-lg-12">
                 <?php
                     //get item id
@@ -24,7 +23,7 @@
                     $itemObject->showItemWhere();
                 ?>
             </div>
-        </div>
+        </main>
     </div>
     <?php   
         $itemObject = new ItemsController();

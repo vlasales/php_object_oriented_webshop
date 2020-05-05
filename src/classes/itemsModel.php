@@ -34,7 +34,7 @@ class ItemsModel extends DBconn{
 
     protected function getItemWhere(){
         try{
-        $itemID = filter_input(INPUT_GET, 'id');
+        $itemID = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
         
         if(isset($itemID)){
             
@@ -68,10 +68,10 @@ class ItemsModel extends DBconn{
         if(isset($newItemBtn)){
             
         //setting create variables
-        $itemName = htmlentities(filter_input(INPUT_POST, 'newItemName'));
-        $itemDescription = htmlentities(filter_input(INPUT_POST, 'newItemDescription'));
-        $itemPrice = htmlentities(filter_input(INPUT_POST, 'newItemPrice'));
-        $itemStock = htmlentities(filter_input(INPUT_POST, 'newItemStock'));
+        $itemName = filter_input(INPUT_POST, 'newItemName', FILTER_SANITIZE_STRING);
+        $itemDescription = filter_input(INPUT_POST, 'newItemDescription', FILTER_SANITIZE_STRING);
+        $itemPrice = filter_input(INPUT_POST, 'newItemPrice', FILTER_VALIDATE_FLOAT);
+        $itemStock = filter_input(INPUT_POST, 'newItemStock', FILTER_VALIDATE_INT);
 
         //file
         $maxFileSize = 80000000;
@@ -92,9 +92,11 @@ class ItemsModel extends DBconn{
                     $imageUpload = $target_file;
                 }
             } else {
-                $_SESSION["sessMSG"] = "<div class='alert alert-danger'>File extension must be jpg, png or jpeg. '{$imageFileType}' is not a valid extension.</div>";
-                header('location: index.php');
-                exit();
+                if(isset($imageUpload)){
+                    $_SESSION["sessMSG"] = "<div class='alert alert-danger'>File extension must be jpg, png or jpeg. '{$imageFileType}' is not a valid extension.</div>";
+                    header('location: index.php');
+                    exit();
+                }
             }
         } else {
             $_SESSION["sessMSG"] = "<div class='alert alert-danger'>A file with the name '{$imageName}' already exists. Please choose another name.</div>";
@@ -102,7 +104,8 @@ class ItemsModel extends DBconn{
             exit();
         }
         
-        $sql = "INSERT INTO oopphp_items(itemName, itemDescription, itemPrice, itemStock, itemImagePath) VALUES (?,?,?,?,?)";
+        if(isset($imageName)){
+            $sql = "INSERT INTO oopphp_items(itemName, itemDescription, itemPrice, itemStock, itemImagePath) VALUES (?,?,?,?,?)";
             $stmt = $this->connect()->prepare($sql);
             $stmt->bindParam(1, $itemName, PDO::PARAM_STR);
             $stmt->bindParam(2, $itemDescription, PDO::PARAM_STR);
@@ -112,6 +115,15 @@ class ItemsModel extends DBconn{
             $stmt->execute();
 
             move_uploaded_file($_FILES["newItemImage"]["tmp_name"], $target_file);
+        } else {
+            $sql = "INSERT INTO oopphp_items(itemName, itemDescription, itemPrice, itemStock) VALUES (?,?,?,?)";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam(1, $itemName, PDO::PARAM_STR);
+            $stmt->bindParam(2, $itemDescription, PDO::PARAM_STR);
+            $stmt->bindParam(3, $itemPrice, PDO::PARAM_STR);
+            $stmt->bindParam(4, $itemStock, PDO::PARAM_INT);
+            $stmt->execute();
+        }
         
     }
         }
@@ -145,7 +157,7 @@ class ItemsModel extends DBconn{
             //begin transaction
             $pdo->beginTransaction();
 
-            $itemID = filter_input(INPUT_POST, 'deleteItemID');
+            $itemID = filter_input(INPUT_POST, 'deleteItemID', FILTER_VALIDATE_INT);
 
             $sql = "DELETE FROM oopphp_items WHERE itemID = ?";
             $stmt = $pdo->prepare($sql);
@@ -153,7 +165,7 @@ class ItemsModel extends DBconn{
             $stmt->execute();
 
             //delete wishlist
-            $itemID_fk = filter_input(INPUT_POST, 'deleteItemID');
+            $itemID_fk = filter_input(INPUT_POST, 'deleteItemID', FILTER_VALIDATE_INT);
 
             $sql = "DELETE FROM oopphp_wishlist WHERE itemID_fk = ?";
             $stmt2 = $pdo->prepare($sql);
@@ -163,7 +175,7 @@ class ItemsModel extends DBconn{
             $pdo->commit();
 
             //delete image
-            $imageNameDelete = htmlentities(filter_input(INPUT_POST, 'deleteImageName'));
+            $imageNameDelete = filter_input(INPUT_POST, 'deleteImageName', FILTER_SANITIZE_STRING);
             unlink($imageNameDelete);
 
         }
@@ -185,6 +197,42 @@ class ItemsModel extends DBconn{
                 }
             }
         }
+    }
+
+    //delete image
+    protected function setDeleteImageItem(){
+        try{
+        $deleteImageBtn = filter_input(INPUT_POST, 'deleteImageItemBtn');
+        
+        if(isset($deleteImageBtn)){
+            $itemID = filter_input(INPUT_POST, 'deleteItemImageID', FILTER_VALIDATE_INT);
+
+            //deleting image is actually an update. or else you delete the whole user
+            $sql = "UPDATE oopphp_items SET itemImagePath = null WHERE itemID = ?";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam(1, $itemID, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $deleteImageUser = filter_input(INPUT_POST, 'deleteImageItem', FILTER_SANITIZE_STRING);
+            unlink($deleteImageUser);
+        }
+    }
+    catch(Exception $e){
+        echo $e->getMessage();
+    }
+    finally{
+        if(isset($deleteImageBtn)){
+            if($stmt->rowCount() > 0){
+                $_SESSION['sessMSG'] = "<div class='alert alert-success'>Item with ID {$itemID} image deleted.</div>"; 
+                header("location: index.php");
+                exit();
+            } else {
+                $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Error. User with ID {$itemID} image not deleted.</div>"; 
+                header("location: index.php");
+                exit();
+            }
+        }
+    }
     }
 
     //update - also updates the wishlist
@@ -239,11 +287,11 @@ class ItemsModel extends DBconn{
             $pdo->beginTransaction();
 
             //items
-            $itemID = htmlentities(filter_input(INPUT_POST, 'updateItemID'));
-            $itemName = htmlentities(filter_input(INPUT_POST, 'updateItemName'));
-            $itemDescription = htmlentities(filter_input(INPUT_POST, 'updateItemDescription'));
-            $itemPrice = htmlentities(filter_input(INPUT_POST, 'updateItemPrice'));
-            $itemStock = htmlentities(filter_input(INPUT_POST, 'updateItemStock'));
+            $itemID = filter_input(INPUT_POST, 'updateItemID', FILTER_VALIDATE_INT);
+            $itemName = filter_input(INPUT_POST, 'updateItemName', FILTER_SANITIZE_STRING);
+            $itemDescription = filter_input(INPUT_POST, 'updateItemDescription', FILTER_SANITIZE_STRING);
+            $itemPrice = filter_input(INPUT_POST, 'updateItemPrice', FILTER_VALIDATE_FLOAT);
+            $itemStock = filter_input(INPUT_POST, 'updateItemStock', FILTER_VALIDATE_INT);
             
             //we must have 2 queries when it comes to images. or else we will have a null image path if the user clicks update without choosing and image every time
             if(isset($imageUpload)){
@@ -270,11 +318,11 @@ class ItemsModel extends DBconn{
             }
 
             //wishlist
-            $itemID_fk = htmlentities(filter_input(INPUT_POST, 'updateItemID'));
-            $itemName_fk = htmlentities(filter_input(INPUT_POST, 'updateItemName'));
-            $itemDescription_fk = htmlentities(filter_input(INPUT_POST, 'updateItemDescription'));
-            $itemPrice_fk = htmlentities(filter_input(INPUT_POST, 'updateItemPrice'));
-            $itemStock_fk = htmlentities(filter_input(INPUT_POST, 'updateItemStock'));
+            $itemID_fk = filter_input(INPUT_POST, 'updateItemID', FILTER_VALIDATE_INT);
+            $itemName_fk = filter_input(INPUT_POST, 'updateItemName', FILTER_SANITIZE_STRING);
+            $itemDescription_fk = filter_input(INPUT_POST, 'updateItemDescription', FILTER_SANITIZE_STRING);
+            $itemPrice_fk = filter_input(INPUT_POST, 'updateItemPrice', FILTER_VALIDATE_FLOAT);
+            $itemStock_fk = filter_input(INPUT_POST, 'updateItemStock', FILTER_VALIDATE_INT);
 
             if(isset($imageUpload)){
                 $sql = "UPDATE oopphp_wishlist SET itemName_fk = ?, itemDescription_fk = ?, itemPrice_fk = ?, itemStock_fk = ?, itemImagePath_fk = ? WHERE itemID_fk = ?";
@@ -303,7 +351,7 @@ class ItemsModel extends DBconn{
             $pdo->commit();
 
             //only delete image if there is an upload file
-            $updateImageRemove = htmlentities(filter_input(INPUT_POST, 'updateImageRemove'));
+            $updateImageRemove = filter_input(INPUT_POST, 'updateImageRemove', FILTER_SANITIZE_STRING);
             if(isset($imageUpload)){
                 unlink($updateImageRemove);
             }

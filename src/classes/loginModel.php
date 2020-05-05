@@ -5,8 +5,8 @@ class LoginModel extends DBconn{
         $loginBtn = filter_input(INPUT_POST, 'loginBtn');
 
         if(isset($loginBtn)){
-        $userName = filter_input(INPUT_POST, 'loginName');
-        $userPassword = filter_input(INPUT_POST, 'loginPassword');
+        $userName = filter_input(INPUT_POST, 'loginName', FILTER_SANITIZE_STRING);
+        $userPassword = filter_input(INPUT_POST, 'loginPassword', FILTER_SANITIZE_STRING);
  
         $sql = "SELECT * FROM oopphp_users WHERE username = ?";
         $stmt = $this->connect()->prepare($sql);
@@ -28,7 +28,7 @@ class LoginModel extends DBconn{
                         $_SESSION['isAdmin'] = $isAdmin;
                     }
                     $_SESSION['sessMSG'] = "<div class='alert alert-success'>Your are now logged in</div>";
-                    header('location: my-account.php');
+                    header('location: account.php');
                     exit();
                 } else {
                     $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Wrong username/password combination.</div>";

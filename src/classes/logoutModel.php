@@ -2,7 +2,9 @@
 class LogoutModel extends DBconn{
 		protected function setLogout(){
             try{
-            if(isset($_POST['logoutBtn'])){
+            $logoutBtn = filter_input(INPUT_POST, 'logoutBtn');
+
+            if(isset($logoutBtn)){
                 if(isset($_SESSION['uid'])){
                     session_unset();
                     session_destroy();

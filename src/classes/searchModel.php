@@ -3,7 +3,7 @@
 class SearchModel extends DBconn{
     protected function getSearchItems(){
         try{
-        $query = filter_input(INPUT_GET, 'itemName');
+        $query = filter_input(INPUT_GET, 'itemName', FILTER_SANITIZE_STRING);
 
         if(isset($query)){
             $query = "%$query%";
@@ -18,9 +18,9 @@ class SearchModel extends DBconn{
             $displayQuery = str_replace('%', '', $query);
 
             if($itemCount == 1){
-                echo "<h1 class='w-100'>There is {$itemCount} item containing: {$displayQuery}</h1>";
+                echo "<h1 class='w-100 pl-3'>There is {$itemCount} item containing: {$displayQuery}</h1>";
             } else {
-                echo "<h1 class='w-100'>There are {$itemCount} item containing: {$displayQuery}</h1>";
+                echo "<h1 class='w-100 pl-3'>There are {$itemCount} item containing: {$displayQuery}</h1>";
             }
 
             if($itemCount > 0){
@@ -39,7 +39,7 @@ class SearchModel extends DBconn{
 
     protected function getSearchUsers(){
         try{
-        $query = filter_input(INPUT_GET, 'userName');
+        $query = filter_input(INPUT_GET, 'userName', FILTER_SANITIZE_STRING);
 
         if(isset($query)){
             $query = "%$query%";

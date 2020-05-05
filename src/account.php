@@ -49,6 +49,12 @@
             </div>
         </div>
     </div>
+    <?php
+    $usersObject = new UsersController();
+        $usersObject->updateUser();
+        $usersObject->deleteUser();
+            $usersObject->deleteUserImage();
+    ?>
 
     <?php include 'includes/content/footer.php' ?>
     <?php include 'includes/content/scripts.php' ?>

@@ -8,7 +8,6 @@ class WishlistView extends WishlistModel{
                 ?>
                 <div>
                     
-                    <p><?php echo $result['itemID_fk']; ?></p>
                     <p>Name: <?php echo $result['itemName_fk']; ?></p>
                     <img src="<?php echo $result['itemImagePath_fk']; ?>">
                     <p>Description: <?php echo $result['itemDescription_fk']; ?></p>
@@ -24,7 +23,7 @@ class WishlistView extends WishlistModel{
                         <?php
                     }
                    ?>
-                    <form method="POST" action="my-account.php">
+                    <form method="POST" action="account.php">
                         <input type="hidden" name="wishlisteItemID" value="<?php echo $result['itemID_fk'] ?>">
                         <input type="hidden" name="wishlistInsertID" value="<?php echo $result['insertID'] ?>">
                         <button type="submit" name="deleteWishlistItemBtn" class="btn btn-danger">Delete from wishlist</button>

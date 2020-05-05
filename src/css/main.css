@@ -11,6 +11,11 @@ img{
     height: 300px;
 }
 
+.darkmode-body{
+    background-color: #121212;
+    color: white;
+}
+
 /*line*/
 #login-form::before, #logout-form::before{
     content: "";
@@ -21,7 +26,8 @@ img{
 }
 
 @media (max-width: 992px) {
-    #login-form::before, #logout-form::before{
+    /*remove line for phones*/
+    #login-form::before, #logout-form::before, #darkModeToggleDivider{
         display: none;
     }
 }

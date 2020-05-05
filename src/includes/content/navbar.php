@@ -16,13 +16,13 @@
             <a class="nav-link text-light" href="signup.php">Sign up</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-light" href="my-account.php">My account</a>
+            <a class="nav-link text-light" href="account.php">Account</a>
         </li>
         <li class="nav-item">
             <a class="nav-link text-light" href="search.php">Search</a>
         </li>
         </ul>
-        <hr class="border-light"><!--only visable on mobile-->
+        <hr>
         <?php
         if(isset($_SESSION['uid'])){
             ?>
@@ -37,7 +37,7 @@
             ?>Not logged in<?php
         }
         ?>
-        <hr class="border-light">
+        <hr>
         <form id="login-form" method="POST" action="login.php" class="form-inline my-2 my-lg-0">
             <label for="loginName" class="mr-lg-2 text-light">Name</label>
             <input type="text" name="loginName" id="loginName" class="form-control mr-sm-2 mb-3 mb-lg-0" required>
@@ -45,10 +45,13 @@
             <input type="password" name="loginPassword" id="loginPassword" class="form-control mr-sm-2" required>
             <button type="submit" name="loginBtn" class="mt-2 mt-lg-0 btn btn-primary">Login</button>
         </form>
-        <hr class="border-light">
+        <hr>
+        <div id="darkModeToggleDivider" class="ml-2 mr-2">|</div><!--::before doesnt work on buttons. small hack-->
+        <button id="darkModeToggleBtn" class="btn btn-info"></button>
+        <hr>
         <form id="logout-form" method="POST" action="logout.php" class="form-inline my-2 my-lg-0">
             <button class="btn btn-danger" name="logoutBtn" type="submit">Log out</button>
-        </form>        
+        </form>
     </div>
     </nav>
 </header>

@@ -10,13 +10,12 @@
 <html lang="en">
 <head>
     <?php include 'includes/content/head.php' ?>
-    <title><?php echo $itemName ?></title>
 </head>
 <body>
     <?php include 'includes/content/navbar.php' ?>
     
     <div class="container-fluid">
-        <div class="row">
+        <main role="main" class="row">
             <div class="col-lg-12">
             <?php
                 $sessMSG2 = new Functions();
@@ -51,7 +50,7 @@
                     <button type="submit" name="newUserBtn" class="btn btn-success">Create user</button>
                 </form>
             </div>
-        </div>
+        </main>
     </div>
     
     <?php include 'includes/content/footer.php' ?>

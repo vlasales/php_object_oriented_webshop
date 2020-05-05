@@ -16,19 +16,19 @@
     
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-6">
+            <main role="main" class="col-lg-6">
                 <?php
                     $usersView = new UsersView();
                     $usersView->showUserWhere();
                 ?>
-            </div>
-            <div class="col-lg-6">
+            </main>
+            <section class="col-lg-6">
                 <h2>Wishlist</h2>
                     <?php
                         $wishlistView = new WishlistView();
                         $wishlistView->showWishlistUser();
                     ?>
-            </div>
+            </section>
         </div>
     </div>
 

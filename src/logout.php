@@ -15,14 +15,14 @@
 	<?php include 'includes/content/navbar.php' ?>
 
 	<div class="container-fluid">
-		<div class="row">
+		<main role="main" class="row">
 			<div class="col-lg-12">
 				<?php
 					$logoutObject = new LogoutController();
 					$logoutObject->logout();
 				?>
 			</div>
-		</div>
+		</main>
 	</div>
 	
 	<?php include 'includes/content/footer.php' ?>

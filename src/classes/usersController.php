@@ -12,8 +12,8 @@ class UsersController extends UsersModel{
     }
 
     //delete image
-    public function deleteImage(){
-        $this->setDeleteImage();
+    public function deleteUserImage(){
+        $this->setDeleteUserImage();
     }
 
     //update

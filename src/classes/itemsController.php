@@ -11,6 +11,11 @@ class ItemsController extends ItemsModel{
         $this->setDeleteItem();
     }
 
+    //delete image
+    public function deleteImageItem(){
+        $this->setDeleteImageItem();
+    }
+
     //update
     public function updateItem(){
         $this->setUpdateItem();

@@ -13,18 +13,18 @@
 </head>
 <body>
     <?php include 'includes/content/navbar.php' ?>
-
+    
     <div class="container-fluid">
         <main role="main" class="row">
-            <div class="col-lg-12">
-                <?php
-                    $loginObject = new LoginController();
-                    $loginObject->loginUser();
-                ?>
+            <div class="col-lg-12 text-center">
+                <h1>404 - Page not found</h1>
+                <a href="index.php">
+                    <button class="btn btn-primary">Back to frontpage</button>
+                </a>
             </div>
         </main>
     </div>
-    
+
     <?php include 'includes/content/footer.php' ?>
     <?php include 'includes/content/scripts.php' ?>
 </body>

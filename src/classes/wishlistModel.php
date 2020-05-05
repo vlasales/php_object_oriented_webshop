@@ -29,7 +29,7 @@ class WishlistModel extends DBconn{
     }
 
     protected function getWIshlistUsers(){
-        $userID = $_GET['id'];
+        $userID = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
         if(isset($userID)){
             $pdo = $this->connect();
@@ -76,12 +76,12 @@ class WishlistModel extends DBconn{
         if(isset($_SESSION['uid'])){
             $userID_fk = $_SESSION['uid'];
         }
-        $itemID_fk = htmlentities(filter_input(INPUT_POST, 'wishlistID'));
-        $itemName_fk = htmlentities(filter_input(INPUT_POST, 'wishlistName'));
-        $itemDescription_fk = htmlentities(filter_input(INPUT_POST, 'wishlistDescription'));
-        $itemPrice_fk = htmlentities(filter_input(INPUT_POST, 'wishlistPrice'));
-        $itemStock_fk = htmlentities(filter_input(INPUT_POST, 'wishlistStock'));
-        $itemImagePath_fk = htmlentities(filter_input(INPUT_POST, 'wishlistImagePath'));
+        $itemID_fk = filter_input(INPUT_POST, 'wishlistID', FILTER_VALIDATE_INT);
+        $itemName_fk = filter_input(INPUT_POST, 'wishlistName', FILTER_SANITIZE_STRING);
+        $itemDescription_fk = filter_input(INPUT_POST, 'wishlistDescription', FILTER_SANITIZE_STRING);
+        $itemPrice_fk = filter_input(INPUT_POST, 'wishlistPrice', FILTER_VALIDATE_FLOAT);
+        $itemStock_fk = filter_input(INPUT_POST, 'wishlistStock', FILTER_VALIDATE_INT);
+        $itemImagePath_fk = filter_input(INPUT_POST, 'wishlistImagePath', FILTER_SANITIZE_STRING);
 
         
             $sql = "INSERT INTO oopphp_wishlist(userID_fk, itemID_fk, itemName_fk, itemDescription_fk, itemPrice_fk, itemStock_fk, itemImagePath_fk) VALUES(?,?,?,?,?,?,?)";
@@ -113,8 +113,8 @@ class WishlistModel extends DBconn{
 
         if(isset($deleteItemBtn)){
         //delete
-        $insertID = filter_input(INPUT_POST, 'wishlistInsertID');
-        $itemID = filter_input(INPUT_POST, 'wishlisteItemID');
+        $insertID = filter_input(INPUT_POST, 'wishlistInsertID', FILTER_VALIDATE_INT);
+        $itemID = filter_input(INPUT_POST, 'wishlisteItemID', FILTER_VALIDATE_INT);
 
         $sql = "DELETE FROM oopphp_wishlist WHERE insertID = ?";
         $stmt = $this->connect()->prepare($sql);
@@ -123,11 +123,11 @@ class WishlistModel extends DBconn{
 
             if($stmt->rowCount() > 0){
                 $_SESSION['sessMSG'] = "<div class='alert alert-success'>Item with ID {$itemID} removed from wishlist.</div>"; 
-                header("location: my-account.php");
+                header("location: account.php");
                 exit();
             } else {
                 $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Error. Item with ID {$itemID} not removed from wishlist.</div>"; 
-                header("location: my-account.php");
+                header("location: account.php");
                 exit();
             }
         }
@@ -138,7 +138,7 @@ class WishlistModel extends DBconn{
         $wishlistPublicBtn = filter_input(INPUT_POST, 'makeWishlistPublic');
 
         if(isset($wishlistPublicBtn)){
-        $userID = htmlentities(filter_input(INPUT_POST, 'wishlistPublicID'));
+        $userID = filter_input(INPUT_POST, 'wishlistPublicID', FILTER_VALIDATE_INT);
     
         $sql = "UPDATE oopphp_users SET wishlistIsPublic = 1 WHERE userID = ?";
         $stmt = $this->connect()->prepare($sql);
@@ -148,11 +148,11 @@ class WishlistModel extends DBconn{
         
             if($stmt->rowCount() > 0){
                 $_SESSION['sessMSG'] = "<div class='alert alert-success'>User with ID {$userID} wishlist is now public.</div>"; 
-                header("location: my-account.php");
+                header("location: account.php");
                 exit();
             } else {
                 $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Error. User with ID {$userID} not public.</div>"; 
-                header("location: my-account.php");
+                header("location: account.php");
                 exit();
             }
         }
@@ -163,7 +163,7 @@ class WishlistModel extends DBconn{
         $wishlistPrivateBtn = filter_input(INPUT_POST, 'makeWishlistPrivate');
 
         if(isset($wishlistPrivateBtn)){
-        $userID = htmlentities(filter_input(INPUT_POST, 'wishlistPrivateID'));
+        $userID = filter_input(INPUT_POST, 'wishlistPrivateID', FILTER_VALIDATE_INT);
         
         $sql = "UPDATE oopphp_users SET wishlistIsPublic = 0 WHERE userID = ?";
         $stmt = $this->connect()->prepare($sql);
@@ -173,11 +173,11 @@ class WishlistModel extends DBconn{
         
             if($stmt->rowCount() > 0){
                 $_SESSION['sessMSG'] = "<div class='alert alert-success'>User with ID {$userID} wishlist is now private.</div>"; 
-                header("location: my-account.php");
+                header("location: account.php");
                 exit();
             } else {
                 $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Error. User with ID {$userID} not private.</div>"; 
-                header("location: my-account.php");
+                header("location: account.php");
                 exit();
             }
         }
