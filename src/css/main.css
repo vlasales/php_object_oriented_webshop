@@ -2,7 +2,6 @@
     margin: 0;
     padding: 0;
 }
-
 body{
     overflow-y: scroll;
 }
@@ -10,14 +9,12 @@ img{
     width: 300px;
     height: 300px;
 }
-
-.darkmode-body{
+.darkmode-bg{
     background-color: #121212;
     color: white;
 }
 
-/*line*/
-#login-form::before, #logout-form::before{
+.dividerLine::before{
     content: "";
     height: 20px;
     width: 1px;
@@ -25,9 +22,8 @@ img{
     margin: 0px 10px;
 }
 
-@media (max-width: 992px) {
-    /*remove line for phones*/
-    #login-form::before, #logout-form::before, #darkModeToggleDivider{
+@media (max-width: 1200px) {
+    .dividerLine::before, .dividerLineContent{
         display: none;
     }
 }

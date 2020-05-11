@@ -7,6 +7,9 @@ class WishlistController extends WishlistModel{
     public function DeleteItemWishList(){
         $this->setDeleteItemWishlist();
     }
+    public function DeleteAllWishlistItems(){
+        $this->setDeleteItemWishlistAll();
+    }
 
     public function MakeWishlistPublic(){
         $this->setWishlistPublic();

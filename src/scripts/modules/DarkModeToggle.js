@@ -6,32 +6,41 @@ class DarkModeToggle{
         //all hr lines
         this.hrTags = document.getElementsByTagName('hr');
 
+        //login modal
+        this.loginModalBG = document.querySelector('.modal-content');
+
         this.ToggleDarkmode();
         this.LoadCheckDarkmode();
         this.LoadDarkmodeBtnText();
-        this.ToggleDarkmodeBtnText();
+        this.ToggleDarkmodeBtnText();        
     }
+
+ 
 
     //add or remove item from localstorage to toggle darkmode class
     ToggleDarkmode(){
         this.darkModeToggleBtn.addEventListener('click', () => {
             if(localStorage.getItem('darkMode') == '1'){
                 localStorage.removeItem('darkMode');
-                document.body.classList.remove('darkmode-body');
+                document.body.classList.remove('darkmode-bg');
 
                 //toggle hr lines to be light during darkmode
                 let i;
                 for(i = 0; i < this.hrTags.length; i++){
                     this.hrTags[i].classList.remove('border-light');
                 }
+
+                this.loginModalBG.classList.remove('darkmode-bg');
             } else {
                 localStorage.setItem('darkMode', '1');
-                document.body.classList.add('darkmode-body');
+                document.body.classList.add('darkmode-bg');
 
                 let i;
                 for(i = 0; i < this.hrTags.length; i++){
                     this.hrTags[i].classList.add('border-light');
                 }
+
+                this.loginModalBG.classList.add('darkmode-bg');
             }
         })
     }
@@ -40,12 +49,14 @@ class DarkModeToggle{
     LoadCheckDarkmode(){
         window.addEventListener('load', () => {
             if(localStorage.getItem('darkMode') == '1'){
-                document.body.classList.add('darkmode-body');
+                document.body.classList.add('darkmode-bg');
                 
                 let i;
                 for(i = 0; i < this.hrTags.length; i++){
                     this.hrTags[i].classList.add('border-light');
                 }
+
+                this.loginModalBG.classList.add('darkmode-bg');
             }
         })
     }

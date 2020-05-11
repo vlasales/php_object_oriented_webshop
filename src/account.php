@@ -43,6 +43,7 @@
                 <?php
                     $wishlistObject = new WishlistController();
                     $wishlistObject->DeleteItemWishList();
+                    $wishlistObject->DeleteAllWishlistItems();
                     $wishlistObject->MakeWishlistPublic();
                     $wishlistObject->MakeWishlistPrivate();
                 ?>

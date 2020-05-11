@@ -34,6 +34,12 @@ class WishlistView extends WishlistModel{
                 $wishlist_total = $wishlist_total + $result['itemPrice_fk'];
             }
             echo "<h2 class='text-primary'>Your total wishlist price: {$wishlist_total} DKK</h2>";
+            ?>
+                <form action="account.php" method="POST">
+                    <input type="hidden" name="wishlistDeleteAllUserID" value="<?php echo $result['userID_fk'] ?>">
+                    <button type="submit" name="wishlistDeleteAllBtn" class="btn btn-danger">Delete all items from wishlist</button>
+                </form>
+            <?php
         }
         
     }

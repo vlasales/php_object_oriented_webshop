@@ -107,7 +107,7 @@ class WishlistModel extends DBconn{
         }
     }
 
-    //delete from wishlist
+    //delete 1 from wishlist
     protected function setDeleteItemWishlist(){
         $deleteItemBtn = filter_input(INPUT_POST, 'deleteWishlistItemBtn');
 
@@ -127,6 +127,31 @@ class WishlistModel extends DBconn{
                 exit();
             } else {
                 $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Error. Item with ID {$itemID} not removed from wishlist.</div>"; 
+                header("location: account.php");
+                exit();
+            }
+        }
+    }
+
+    //delete all
+    protected function setDeleteItemWishlistAll(){
+        $wishlistDeleteAllBtn = filter_input(INPUT_POST, 'wishlistDeleteAllBtn');
+
+        if(isset($wishlistDeleteAllBtn)){
+        //delete
+        $wishlistDeleteAllUserID = filter_input(INPUT_POST, 'wishlistDeleteAllUserID', FILTER_VALIDATE_INT);
+
+        $sql = "DELETE FROM oopphp_wishlist WHERE userID_fk = ?";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(1, $wishlistDeleteAllUserID, PDO::PARAM_INT);
+        $stmt->execute();
+
+            if($stmt->rowCount() > 0){
+                $_SESSION['sessMSG'] = "<div class='alert alert-success'>All items from wishlist deleted</div>"; 
+                header("location: account.php");
+                exit();
+            } else {
+                $_SESSION['sessMSG'] = "<div class='alert alert-danger'>Error. All items from wishlist not deleted</div>"; 
                 header("location: account.php");
                 exit();
             }

@@ -17,11 +17,15 @@ class LoginModel extends DBconn{
         $stmt->bindColumn('isAdmin', $isAdmin, PDO::PARAM_INT);
         $stmt->execute();
 
-        $results = $stmt->fetch();
-        //return $results;
+        $stmt->fetchColumn();
 
             if($stmt->rowCount() > 0){
                 if(password_verify($userPassword, $userPassword_hash)){
+                    //destory session before loggin in, just in case
+                    session_unset();
+                    session_destroy();
+                    session_start();
+
                     $_SESSION['uid'] = $userID;
                     $_SESSION['un'] = $userName;
                     if($isAdmin == 1){
